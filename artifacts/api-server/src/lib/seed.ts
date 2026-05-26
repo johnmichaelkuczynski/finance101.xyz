@@ -38,7 +38,11 @@ Mathematics has *four* different signs for "is the same as," and they do not mea
 
 ## A science example
 
-In physics, the relativistic energy of a particle is *exactly* $E = \\sqrt{(mc^2)^2 + (pc)^2}$. For a particle at rest ($p = 0$), this collapses to the famous **identity** $E \\equiv mc^2$ — true for every rest mass, not just one. When physicists report a measurement, however, they write $E \\approx 938\\ \\text{MeV}$ for the proton's rest energy, because the measured value is an approximation, not the exact theoretical value.
+Einstein's famous **equation** $E = mc^2$ uses $=$ because it states a single physical relation: the rest energy of an object equals its mass times $c^2$. It is *not* an identity — it does not hold "for all values of a variable," it holds because that is how rest energy is defined in special relativity.
+
+Contrast that with a genuine **identity** like the Pythagorean identity $\\sin^2 \\theta + \\cos^2 \\theta \\equiv 1$, which is true for *every* angle $\\theta$ — the equality is built into the definitions of sine and cosine themselves.
+
+When physicists *report a measurement* they switch to $\\approx$: the proton's rest energy is $E \\approx 938\\ \\text{MeV}$, because the measured value is rounded, not exact.
 
 ## Why the distinction matters
 
