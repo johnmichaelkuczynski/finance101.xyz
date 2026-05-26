@@ -75,7 +75,7 @@ export function Scene2({ setCursorPos, setIsClicking }: { setCursorPos: (pos: {x
         <div className="prose prose-sm max-w-none text-foreground/80 space-y-6">
           <h2 className="font-serif text-2xl text-primary">Number sense</h2>
           <p>
-            Quantitative reasoning starts with a clear sense of what numbers mean. A number isn't just a symbol on a page; it represents a quantity, a magnitude, a position on a line, or a relationship between things.
+            Mathematical notation is the most compressed writing a scientist ever produces. Every symbol does work — and misreading one flips the meaning of the whole sentence. This course teaches you to read, type, and mean each symbol on the page.
           </p>
           <p>
             The real number line is the foundation. Every point on the line corresponds to exactly one real number, and every real number corresponds to exactly one point.

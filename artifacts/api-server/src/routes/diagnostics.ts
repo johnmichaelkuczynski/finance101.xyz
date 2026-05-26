@@ -366,7 +366,7 @@ router.post("/diagnostics/synthetic-run", async (_req, res) => {
   steps.push(
     await run("AI detection scan (pasted-style text should flag)", async () => {
       const r = await detect(
-        "In conclusion, the multifaceted tapestry of quantitative reasoning is paramount to navigating the landscape of modern academic discourse.",
+        "In conclusion, the multifaceted tapestry of mathematical notation is paramount to navigating the landscape of modern academic discourse.",
         {
           keystrokeCount: 8,
           eraseCount: 0,
