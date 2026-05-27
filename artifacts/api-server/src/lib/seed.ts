@@ -222,7 +222,7 @@ There is no mathematical reason for base 10. We use it because humans have ten f
 
 ## A scientific example
 
-Floating-point arithmetic in a computer represents a real number as $\\pm m \\cdot 2^{e}$, with the *mantissa* $m$ and *exponent* $e$ both stored in binary. The number $0.1$ has a finite decimal representation but an *infinite* binary one — which is why `0.1 + 0.2 !== 0.3` in JavaScript. The mathematical number is fine; its representation in base $2$ rounds.
+Floating-point arithmetic in a computer represents a real number as $\\pm m \\cdot 2^{e}$, with the *mantissa* $m$ and *exponent* $e$ both stored in binary. The number $0.1$ has a finite decimal representation but an *infinite* binary one — which is why "0.1 + 0.2" is not exactly "0.3" in JavaScript. The mathematical number is fine; its representation in base $2$ rounds.
 
 ## A philosophical aside
 
@@ -1062,7 +1062,7 @@ A useful variant: assume $P(0), P(1), \\ldots, P(k)$ all hold and prove $P(k+1)$
 
 ## A scientific example
 
-The proof that a binary heap of $n$ elements supports `extract-min` in $O(\\log n)$ time goes by induction on the height of the heap. Almost every correctness proof in computer science is, under the hood, an induction over the size or structure of the input.`,
+The proof that a binary heap of $n$ elements supports *extract-min* in $O(\\log n)$ time goes by induction on the height of the heap. Almost every correctness proof in computer science is, under the hood, an induction over the size or structure of the input.`,
   },
   {
     slug: "sets-russell-paradox",
