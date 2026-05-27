@@ -561,7 +561,7 @@ async function auditProblem(p: {
       issue?: string;
       betterAnswer?: string;
     }>(
-      "You are a rigorous grader for a college-level math-notation course. " +
+      "You are a rigorous grader for a college-level conceptual-mathematics course. " +
         "You are given a problem PROMPT and the STATED CORRECT ANSWER stored in the course database. " +
         "Decide whether the stated answer is genuinely correct, fully sufficient, and notationally appropriate for the prompt. " +
         "Minor stylistic differences (LaTeX vs unicode, spacing, equivalent algebraic forms) are NOT issues. Flag only true errors: wrong value, wrong formula, wrong symbol, wrong physics, missing a required part of the answer, or an answer that does not actually satisfy the prompt. " +
