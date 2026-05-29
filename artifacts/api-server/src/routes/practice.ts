@@ -163,12 +163,17 @@ router.post("/practice/sessions/:sessionId/next", async (req, res): Promise<void
       userRequest || `Generate a new ${difficultyLabel} problem on ${topic.title}.`,
     );
   } catch {
+    const years = Math.max(1, Math.round(difficulty * 2));
+    const rate = 0.05 + difficulty * 0.01;
+    const fv = Math.round(1000 * Math.pow(1 + rate, years));
     generated = {
-      prompt: `Practice (${topic.title}): If $x + ${Math.round(
-        difficulty * 3,
-      )} = ${Math.round(difficulty * 7)}$, what is $x$?`,
-      correctAnswer: String(Math.round(difficulty * 7) - Math.round(difficulty * 3)),
-      explanation: "Subtract from both sides.",
+      prompt: `Practice (${topic.title}): Using the present value relation $PV = FV/(1+r)^n$, what is the present value of a single cash flow of $\\$${fv}$ to be received in ${years} year${
+        years === 1 ? "" : "s"
+      }, discounted at $r = ${(rate * 100).toFixed(0)}\\%$? Round to the nearest dollar.`,
+      correctAnswer: String(Math.round(fv / Math.pow(1 + rate, years))),
+      explanation: `Discount the future value back to today: $PV = ${fv}/(1+${rate.toFixed(
+        2,
+      )})^{${years}}$.`,
     };
   }
 

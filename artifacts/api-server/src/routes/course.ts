@@ -18,24 +18,24 @@ const router: IRouter = Router();
 
 const WEEK_TITLES: Record<number, { title: string; summary: string }> = {
   1: {
-    title: "Week 1 — The number systems",
+    title: "Week 1 — Foundations and the time value of money",
     summary:
-      "Counting, integers, rationals, the √2 scandal, the reals and completeness, complex numbers as rotations, zero and negatives, bases and place value, countable vs. uncountable infinity.",
+      "What finance is and why it exists; the financial system and markets; money, interest, and the time value of money; present and future value; discounting cash flows; annuities and perpetuities; nominal vs. real rates and inflation.",
   },
   2: {
-    title: "Week 2 — Operations and structures",
+    title: "Week 2 — Financial statements and analysis",
     summary:
-      "What an operation is; commutativity, associativity, distributivity; groups, rings, fields; vector spaces; functions; equivalence and isomorphism; modular arithmetic.",
+      "An overview of the financial statements; the balance sheet; the income statement; the statement of cash flows; financial ratio analysis; working capital and liquidity; reading annual reports.",
   },
   3: {
-    title: "Week 3 — The continuum: calculus, geometry, topology",
+    title: "Week 3 — Risk, return, and markets",
     summary:
-      "Limits, continuity, derivatives, integrals, the Fundamental Theorem of Calculus, sequences and Zeno, non-Euclidean geometry, topology and curvature.",
+      "Risk and return fundamentals; measuring return; measuring risk and volatility; diversification and portfolios; the risk–return tradeoff; the Capital Asset Pricing Model; market efficiency.",
   },
   4: {
-    title: "Week 4 — Foundations: logic, proof, undecidability",
+    title: "Week 4 — Valuation and corporate finance",
     summary:
-      "Propositional and predicate logic, proof, induction, Russell's paradox, independence results, Gödel's theorems, probability foundations, the halting problem.",
+      "Bond valuation; stock valuation; capital budgeting and NPV; the cost of capital; capital structure and leverage; corporate financing and dividends; financial intermediaries; a capstone synthesis.",
   },
 };
 
@@ -124,7 +124,7 @@ router.get("/course/overview", async (_req, res) => {
 
   res.json(
     GetCourseOverviewResponse.parse({
-      title: "Teach Yourself Conceptual Mathematics",
+      title: "Teach Yourself Finance",
       weeks,
       totals: { assignmentsCompleted, assignmentsTotal, practiceCount },
     }),

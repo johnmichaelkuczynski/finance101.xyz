@@ -1,0 +1,1 @@
+- [QuantReason clone operations](quantreason-clone-ops.md) — reskinning the course app: content lives in seed.ts + course.ts WEEK_TITLES/title + frontend chrome + fallback paths; external Neon DB needs db push before seed.
