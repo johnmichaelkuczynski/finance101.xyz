@@ -8,7 +8,7 @@
 
 Teach Yourself Finance is a self-paced, single-user web course that asks the question finance classes usually skip: *why are these formulas the formulas?* What is an interest rate, really? Why must a balance sheet balance? Where does the risk premium come from? Why is the value of any asset always the present value of its future cash flows?
 
-The course is a content reskin of the **QuantReason** Quantitative Reasoning app. The full QuantReason runtime — lectures with short / medium / long depth, section-scoped AI tutor, adaptive practice, AI-graded homework / tests / midterm / final, two-layer AI-authorship detection, and one-click diagnostics — is preserved unchanged. The **purpose** of this build is to teach the conceptual backbone of modern finance — the same backbone every MBA, CFA candidate, and corporate-finance analyst eventually meets, presented in one connected arc.
+The course runtime — lectures with short / medium / long depth, section-scoped AI tutor, adaptive practice, AI-graded homework / tests / midterm / final, two-layer AI-authorship detection, and one-click diagnostics — teaches the conceptual backbone of modern finance: the same backbone every MBA, CFA candidate, and corporate-finance analyst eventually meets, presented in one connected arc.
 
 ---
 
@@ -21,7 +21,7 @@ The course is a content reskin of the **QuantReason** Quantitative Reasoning app
   - **Week 4 — Valuation and corporate finance**: bond valuation; stock valuation (Gordon growth); capital budgeting and NPV; cost of capital and WACC; capital structure, leverage, and Modigliani–Miller; corporate financing and dividend policy; financial intermediaries and institutions; capstone synthesis ($V = \sum E(CF_t)/(1+r)^t$).
 - **One Real Example per Lecture** — Every micro-lecture grounds its concept in a worked example from business, history, or markets — e.g. \$1{,}000 compounding at $8\%$ for thirty years, British consols as a literal perpetuity, U.S. savers in the inflationary 1970s, Amazon's profitless years vs. its operating cash flow, Enron's footnote-buried leverage, the 2008 spike in the VIX, Markowitz's umbrella-and-sunscreen portfolio, CAPM hurdle rates, the dot-com bubble vs. the EMH, bond prices falling when yields rise, Modigliani–Miller and Lehman's maturity-transformation collapse.
 - **One Symbolic Question per Lecture** — Every homework / test / midterm / final problem requires the student to *write the key finance formula in symbols* ($PV = FV/(1+r)^n$, $NPV = \sum CF_t/(1+r)^t - CF_0$, $E(R_i) = R_f + \beta_i(E(R_m) - R_f)$, $WACC = (E/V)r_e + (D/V)r_d(1-T)$), not just describe it in English. The on-screen math keyboard — with its dedicated **Finance** tab — is the only practical way to compose these answers.
-- **Three-Depth Lectures, Section-Scoped Tutor, Adaptive Practice, AI Grading, Two-Layer Detection, One-Click Diagnostics** — All inherited unchanged from the QuantReason runtime.
+- **Three-Depth Lectures, Section-Scoped Tutor, Adaptive Practice, AI Grading, Two-Layer Detection, One-Click Diagnostics** — The full runtime stack behind the course.
 - **Built-In Product Demo Video** — The companion `qr-course-demo` artifact still ships as a short screencast of the live UI.
 
 ---
@@ -55,7 +55,7 @@ Both are requested via the secrets panel; neither is hard-coded.
 ## 🎓 Designed For
 
 - **Anyone Who Looked at a DCF Model and Wondered "But Where Does This *Come From*?":** A short, focused course on the conceptual scaffolding behind the formulas — interest, present value, statements, risk, return, cost of capital, valuation.
-- **The Maintainer of QuantReason and Its Clones:** A pure stress test of the math-notation stack — keyboard, LaTeX rendering, grading, and AI detection — under a different curriculum, with answers that lean on summations, discount factors, expectations, and Greek-letter risk parameters.
+- **Anyone Maintaining the Math-Notation Stack:** A pure stress test of the keyboard, LaTeX rendering, grading, and AI detection — under a curriculum with answers that lean on summations, discount factors, expectations, and Greek-letter risk parameters.
 
 ---
 

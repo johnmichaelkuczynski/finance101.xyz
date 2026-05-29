@@ -8,7 +8,7 @@ A complete architectural blueprint for the *Teach Yourself Finance* 4-week cours
 
 Teach Yourself Finance is a self-paced, single-user, no-login web course covering the *ideas behind the formulas* of modern finance — the time value of money, financial statements, risk and return, and valuation and corporate finance. Each micro-lecture introduces one concept, grounds it in a real example from business or markets, and asks the student to write the defining formula *in symbols of their own* using the on-screen math keyboard.
 
-The full QuantReason runtime is preserved unchanged: lectures at three depths, section-scoped AI tutor, adaptive practice, AI-graded assignments, two-layer AI-authorship detection, and one-click diagnostics.
+The course runtime provides: lectures at three depths, section-scoped AI tutor, adaptive practice, AI-graded assignments, two-layer AI-authorship detection, and one-click diagnostics.
 
 The product surface is three deployable artifacts in one pnpm monorepo:
 
@@ -72,7 +72,7 @@ Push schema with `pnpm --filter @workspace/db run push`.
 - If both match: do nothing.
 - If either differs (or the table is empty): wipe attempts, answers, practice, problems, assignments, lectures, topics in dependency order, then re-seed the full curriculum.
 
-This is what lets a single content swap (e.g. swapping a previous QR or notation curriculum out for the finance one) propagate cleanly on the next server start, without manual DB surgery.
+This is what lets a single content swap propagate cleanly on the next server start, without manual DB surgery.
 
 ---
 
