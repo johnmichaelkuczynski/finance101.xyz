@@ -49,7 +49,7 @@ export async function gradeAnswer(opts: {
 
   try {
     const out = await chatJson<{ correct: boolean; explanation: string }>(
-      "You grade short quantitative-reasoning answers. Decide if the student's answer is mathematically equivalent to the correct answer (accept equivalent forms like 1/2 and 0.5, simplified fractions, equivalent algebraic expressions, units treated reasonably). Output strict JSON {\"correct\": boolean, \"explanation\": string} where explanation is 1-3 short sentences and includes the correct answer.",
+      "You grade short finance answers, typically a key formula or identity written in symbols. Decide if the student's answer is mathematically equivalent to the correct answer (accept equivalent algebraic forms and rearrangements, equivalent notation such as Σ vs. written-out sums, 1/2 vs 0.5, simplified fractions, and reasonable variable-name variants like FV/PV, r/i, NI for net income). Output strict JSON {\"correct\": boolean, \"explanation\": string} where explanation is 1-3 short sentences and includes the correct answer.",
       JSON.stringify({
         prompt: opts.prompt,
         correct_answer: correct,

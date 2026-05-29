@@ -46,7 +46,7 @@ export function Sidebar() {
       </div>
 
       <div className="p-4 border-t border-border text-xs text-muted-foreground text-center">
-        Teach Yourself Conceptual Mathematics
+        Teach Yourself Finance
       </div>
     </div>
   );
