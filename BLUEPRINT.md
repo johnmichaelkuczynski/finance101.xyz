@@ -1,12 +1,12 @@
-# Teach Yourself Conceptual Mathematics — App Blueprint
+# Teach Yourself Finance — App Blueprint
 
-A complete architectural blueprint for the *Teach Yourself Conceptual Mathematics* 4-week course. This document is the single reference for what the app does, how it's wired, and the contracts between pieces. For day-to-day commands and gotchas see `replit.md`.
+A complete architectural blueprint for the *Teach Yourself Finance* 4-week course. This document is the single reference for what the app does, how it's wired, and the contracts between pieces. For day-to-day commands and gotchas see `replit.md`.
 
 ---
 
 ## 1. Product summary
 
-Teach Yourself Conceptual Mathematics is a self-paced, single-user, no-login web course covering the *ideas behind the symbols* of modern mathematics — numbers, operations and structures, the continuum, and the foundations (logic, proof, undecidability). Each micro-lecture introduces one concept, grounds it in a real example from science or the history of mathematics, and asks the student to write the defining statement *in symbols of their own* using the on-screen math keyboard.
+Teach Yourself Finance is a self-paced, single-user, no-login web course covering the *ideas behind the formulas* of modern finance — the time value of money, financial statements, risk and return, and valuation and corporate finance. Each micro-lecture introduces one concept, grounds it in a real example from business or markets, and asks the student to write the defining formula *in symbols of their own* using the on-screen math keyboard.
 
 The full QuantReason runtime is preserved unchanged: lectures at three depths, section-scoped AI tutor, adaptive practice, AI-graded assignments, two-layer AI-authorship detection, and one-click diagnostics.
 
@@ -29,16 +29,16 @@ Shared contracts live in `lib/`:
 
 ## 2. Curriculum (the ideas)
 
-Source: `artifacts/api-server/src/lib/seed.ts`. 32 micro-lectures across four weeks. Each lecture teaches exactly one concept, anchors it in a real worked example, and ships a question that *requires* the student to write the key statement in symbolic form.
+Source: `artifacts/api-server/src/lib/seed.ts`. 29 micro-lectures across four weeks. Each lecture teaches exactly one concept, anchors it in a real worked example, and ships a question that *requires* the student to write the key formula in symbolic form.
 
 | Week | Theme | Concepts covered |
 | --- | --- | --- |
-| 1 | The number systems | Counting & the number line · rationals & ratios · irrationals & the $\sqrt 2$ scandal · real numbers & completeness · imaginary & complex numbers as rotations · zero, negatives, conceptual leaps · bases & place value · countable vs. uncountable infinity |
-| 2 | Operations and structures | What an operation is · commutativity, associativity, distributivity · groups & symmetry · rings & fields · vector spaces · functions as mappings · relations, equivalence classes, isomorphism · modular arithmetic |
-| 3 | The continuum | Limits & the taming of infinity · continuity · derivatives as instantaneous rate · integrals as accumulation · the Fundamental Theorem of Calculus · sequences, series, & Zeno · Euclidean vs. non-Euclidean geometry · topology, dimension, & curvature |
-| 4 | Foundations: logic, proof, undecidability | Propositional & predicate logic · what a proof is · mathematical induction · sets & Russell's paradox · axioms & independence · Gödel's incompleteness theorems · probability (measure, frequency, credence) · computability & the halting problem |
+| 1 | Foundations and the time value of money | What finance is & why it exists · the financial system & markets · money, interest & the time value of money · present value & future value · discounting cash flows · annuities & perpetuities · nominal vs. real rates & inflation |
+| 2 | Financial statements and analysis | The three statements overview · the balance sheet ($A = L + E$) · the income statement · the statement of cash flows · ratio analysis & DuPont · working capital & liquidity · reading & interpreting annual reports |
+| 3 | Risk, return, and markets | Risk & return fundamentals · measuring return (expected value, geometric vs. arithmetic) · measuring risk & volatility ($\sigma^2$, $\sigma$) · diversification & portfolio basics · the risk–return tradeoff & Sharpe ratio · the Capital Asset Pricing Model · market efficiency |
+| 4 | Valuation and corporate finance | Bond valuation · stock valuation (Gordon growth) · capital budgeting & NPV · cost of capital & WACC · capital structure, leverage & Modigliani–Miller · corporate financing & dividend policy · financial intermediaries & institutions · capstone synthesis ($V = \sum E(CF_t)/(1+r)^t$) |
 
-Assignment shape: 2 homeworks per week plus a graded checkpoint at the end of each week — a Week 1 test, the midterm at the end of Week 2, a Week 3 test, and the cumulative final at the end of Week 4 — 12 assignments total. Each problem prompt is *one symbolic statement* the student must compose.
+Assignment shape: 2 homeworks per week plus a graded checkpoint at the end of each week — a Week 1 test, the midterm at the end of Week 2, a Week 3 test, and the cumulative final at the end of Week 4 — 12 assignments total. Each problem prompt is *one symbolic formula* the student must compose.
 
 ---
 
@@ -72,7 +72,7 @@ Push schema with `pnpm --filter @workspace/db run push`.
 - If both match: do nothing.
 - If either differs (or the table is empty): wipe attempts, answers, practice, problems, assignments, lectures, topics in dependency order, then re-seed the full curriculum.
 
-This is what lets a single content swap (e.g. swapping a previous QR or notation curriculum out for the conceptual-math one) propagate cleanly on the next server start, without manual DB surgery.
+This is what lets a single content swap (e.g. swapping a previous QR or notation curriculum out for the finance one) propagate cleanly on the next server start, without manual DB surgery.
 
 ---
 
@@ -114,7 +114,7 @@ artifacts/api-server/src/
     ├── ai.ts              OpenAI client (Replit AI Integrations proxy)
     ├── detection.ts       GPTZero + heuristic + diachronic scoring
     ├── grading.ts         AI-graded answer with rationale
-    ├── seed.ts            32-topic curriculum + auto-reseed
+    ├── seed.ts            29-topic finance curriculum + auto-reseed
     └── logger.ts          singleton pino logger (req.log in routes)
 ```
 
@@ -129,9 +129,9 @@ artifacts/api-server/src/
 
 ## 6. Symbolic answer harness — `MathKeyboard.tsx`
 
-The student-facing app (`artifacts/qr-course`) ships a floating math keyboard that opens when the answer textarea focuses. Each tab targets one of the four curricular families (Numbers / Algebra & structures / Calculus & continuum / Logic & sets). Pressing a key inserts the corresponding LaTeX fragment at the textarea cursor.
+The student-facing app (`artifacts/qr-course`) ships a floating math keyboard that opens when the answer textarea focuses. Each tab targets one of the curricular families, including a dedicated **Finance** tab with the symbols most assignment answers need ($PV$, $FV$, $NPV$, $IRR$, $WACC$, $R_f$, $\beta$, $\sigma$, $\rho$, $E(R)$, the $\sum_{t=1}^{n}$ template, the $1/(1+r)^t$ discount factor, the $(E/V)r_e + (D/V)r_d(1-T)$ skeleton). Pressing a key inserts the corresponding LaTeX fragment at the textarea cursor.
 
-The conceptual-math curriculum is, by design, a worst-case load for this keyboard: most assignment problems' canonical answers contain at least one symbol that requires it — set-builder notation, quantifiers, blackboard-bold sets, congruences, $\varepsilon$–$\delta$, $\Sigma$ / $\Pi$ / $\int$ / $\partial$, $\mathbb{Z}/n\mathbb{Z}$, and so on.
+The finance curriculum is, by design, a worst-case load for this keyboard: most assignment problems' canonical answers contain at least one symbol that requires it — summations, expectations, discount factors, Greek-letter risk parameters, the CAPM line, the WACC formula, the dividend-discount perpetuity, and so on.
 
 What the harness stresses:
 
@@ -140,7 +140,7 @@ What the harness stresses:
 | Tab discoverability | Each lecture's problems push the student into a specific tab; if a tab is hidden or mislabeled, the student gets stuck. |
 | Cursor insertion | LaTeX fragments must land at the current caret without smearing surrounding text. |
 | Keystroke detection | Each keyboard press counts as a real keystroke in the diachronic trace; otherwise typed-answer behaviour reads as a paste. |
-| LaTeX-aware grading | Canonical answers contain LaTeX; the grader must match `\sum` to `Σ`, `\geq` to `≥`, `\mathbb{Q}` to `ℚ`, `\equiv \ldots \pmod n`, set-builder `\{x \in \mathbb{R} \mid \ldots\}`, and quantifier strings. |
+| LaTeX-aware grading | Canonical answers contain LaTeX; the grader must match `\sum` to `Σ`, `\beta` to `β`, `\sigma` to `σ`, `\rho` to `ρ`, `E(R_i) = R_f + \beta_i(E(R_m) - R_f)`, $\sum_{t=1}^{n} CF_t/(1+r)^t$, and the WACC string. |
 | KaTeX rendering | Both lecture body and student answer-preview render the same LaTeX subset. |
 
 ---
@@ -206,7 +206,7 @@ Strict ordered checklist returning `{ ok, generatedAt, steps[] }`:
 
 1. **Environment** — `DATABASE_URL` present.
 2. **Database** — `SELECT 1` round-trip.
-3. **Database** — course content seeded (≥32 topics, ≥1 lecture / assignment / problem).
+3. **Database** — course content seeded (full 29-topic finance curriculum, ≥1 lecture / assignment / problem).
 4. **OpenAI** — fast-model chat completion returns non-empty text.
 5. **OpenAI** — JSON mode returns `{ ok: true }`.
 6. **Detection** — heuristic+scoring pipeline returns numbers for a benign sentence.
@@ -263,7 +263,7 @@ The trace is included in the answer `PUT` body and on `POST submit`, then stored
 
 ## 10. Demo video — `@workspace/qr-course-demo`
 
-A **screencast-style** product walkthrough of the conceptual-math course UI, **not** a marketing reel. Built per the `video-js` skill: React + framer-motion, exported to MP4 from the preview pane via the browser recorder.
+A **screencast-style** product walkthrough of the finance course UI, **not** a marketing reel. Built per the `video-js` skill: React + framer-motion, exported to MP4 from the preview pane via the browser recorder.
 
 ```
 artifacts/qr-course-demo/src/components/video/
@@ -275,11 +275,11 @@ artifacts/qr-course-demo/src/components/video/
 ├── StreamingText.tsx        word-by-word AI-response streaming
 ├── TypingIndicator.tsx      three pulsing dots
 └── video_scenes/
-    ├── Scene1.tsx           Dashboard → Week 1 "The number systems" (8s)
-    ├── Scene2.tsx           Lecture 1.1 "Counting, the integers, and the number line": Short/Long toggle + Practice/Tutor tabs (8s)
-    ├── Scene3.tsx           Tutor Q&A: "Why are the rationals countable but the reals are not?" (12s)
-    ├── Scene4.tsx           Analytics with counting KPIs + topic mastery click (10s)
-    ├── Scene5.tsx           Topic Practice: wrong → adjust ↓ → right (symbolic answer typed via the math keyboard) → adjust ↑ (14s)
+    ├── Scene1.tsx           Dashboard → Week 1 "Foundations and the time value of money" (8s)
+    ├── Scene2.tsx           Lecture 1.3 "Money, interest, and the time value of money": Short/Long toggle + Practice/Tutor tabs (8s)
+    ├── Scene3.tsx           Tutor Q&A: "Why does compounding beat simple interest so dramatically over 30 years?" (12s)
+    ├── Scene4.tsx           Analytics with finance KPIs + topic mastery click (10s)
+    ├── Scene5.tsx           Topic Practice: wrong → adjust ↓ → right (CAPM formula typed via the math keyboard's Finance tab) → adjust ↑ (14s)
     └── Scene6.tsx           Assignments review with AI grade + AI-detection chip (10s)
 ```
 
@@ -299,9 +299,9 @@ artifacts/qr-course-demo/src/components/video/
 
 `replit.md` and `README.md` are the always-loaded project READMEs. They contain:
 
-1. **Product overview** — what the course is and why this build exists (conceptual scaffolding behind the symbols).
+1. **Product overview** — what the course is and why this build exists (conceptual scaffolding behind the formulas of finance).
 2. **Required env / secrets** — `DATABASE_URL`, `OPENAI_API_KEY`, `GPTZERO_API_KEY`, `SESSION_SECRET`.
-3. **Curriculum summary** — the 32 concepts across four weeks.
+3. **Curriculum summary** — the 29 concepts across four weeks.
 4. **Technical features** — symbolic-answer harness, two-layer detection, diagnostics, auto-reseed, contract-first API.
 
 If you change anything in this blueprint, update `README.md` and `replit.md` to match — they are the long-form and short-form views of the same truth.
@@ -310,9 +310,9 @@ If you change anything in this blueprint, update `README.md` and `replit.md` to 
 
 ## 12. End-to-end request example
 
-A student submits Homework 1.1 (the number systems). The full path:
+A student submits Homework 3.6 (the Capital Asset Pricing Model). The full path:
 
-1. Browser: `qr-course/src/pages/AssignmentRunner.tsx` calls the generated `useSubmitAttempt()` hook with `{ traces: { [problemId]: TraceInput } }`. Every $\sqrt{}$, $\mathbb{Q}$, $\notin$, $\forall$ in the answer was inserted by `MathKeyboard.tsx`, but each insert dispatched a real `keydown` so the trace looks human.
+1. Browser: `qr-course/src/pages/AssignmentRunner.tsx` calls the generated `useSubmitAttempt()` hook with `{ traces: { [problemId]: TraceInput } }`. Every $E(R_i)$, $R_f$, $\beta_i$, $E(R_m)$, $\sum$, and $1/(1+r)^t$ in the answer was inserted from the Finance tab of `MathKeyboard.tsx`, but each insert dispatched a real `keydown` so the trace looks human.
 2. Generated client: `POST /api/assignments/{id}/attempts/{aid}/submit`, validated against `SubmitAttemptBody` Zod schema.
 3. Express route (`routes/assignments.ts`):
    - Loads `attempt` + `answers` + `problems` from Drizzle.
