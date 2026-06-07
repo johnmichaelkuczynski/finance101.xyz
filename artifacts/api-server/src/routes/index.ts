@@ -7,10 +7,16 @@ import tutorRouter from "./tutor";
 import detectionRouter from "./detection";
 import analyticsRouter from "./analytics";
 import diagnosticsRouter from "./diagnostics";
+import { requireAuth } from "../middlewares/requireAuth";
 
 const router: IRouter = Router();
 
+// Health is public so deploy health checks work without a session.
 router.use(healthRouter);
+
+// Everything else requires an authenticated Clerk session. The browser sends
+// the session cookie automatically, so anonymous callers get 401.
+router.use(requireAuth);
 router.use(courseRouter);
 router.use(assignmentsRouter);
 router.use(practiceRouter);

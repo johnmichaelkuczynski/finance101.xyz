@@ -1,1 +1,2 @@
 - [Finance course app operations](finance-course-app-ops.md) — reskinning the course app: content lives in seed.ts + course.ts WEEK_TITLES/title + frontend chrome + fallback paths + artifact/asset titles + docs; external Neon DB needs db push before seed.
+- [Clerk auth setup](clerk-auth-setup.md) — qr-course uses Replit-managed Clerk (Google login); server `requireAuth` (not UI gating) is the security boundary; new /api routes auth-protected by default.
