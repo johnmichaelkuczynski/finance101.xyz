@@ -54,7 +54,7 @@ export default function Landing() {
             ∑
           </div>
           <span className="font-serif font-semibold text-lg tracking-tight">
-            Teach Yourself Finance
+            Finance
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -146,7 +146,7 @@ export default function Landing() {
       </main>
 
       <footer className="border-t border-border py-6 text-center text-sm text-muted-foreground">
-        Teach Yourself Finance — read the idea, ground the idea, write the idea.
+        Finance — read the idea, ground the idea, write the idea.
       </footer>
     </div>
   );

@@ -1,9 +1,9 @@
 ---
 name: Finance course app operations
-description: Non-obvious operational facts for the Teach Yourself Finance course app (qr-course + api-server)
+description: Non-obvious operational facts for the Finance course app (qr-course + api-server)
 ---
 
-# Teach Yourself Finance course app
+# Finance course app
 
 This app (qr-course frontend + api-server backend) is a reskinnable course runtime.
 A full curriculum content swap requires touching more than the seed file.

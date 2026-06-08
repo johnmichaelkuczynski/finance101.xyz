@@ -1,12 +1,12 @@
-# Teach Yourself Finance — App Blueprint
+# Finance — App Blueprint
 
-A complete architectural blueprint for the *Teach Yourself Finance* 4-week course. This document is the single reference for what the app does, how it's wired, and the contracts between pieces. For day-to-day commands and gotchas see `replit.md`.
+A complete architectural blueprint for the *Finance* 4-week course. This document is the single reference for what the app does, how it's wired, and the contracts between pieces. For day-to-day commands and gotchas see `replit.md`.
 
 ---
 
 ## 1. Product summary
 
-Teach Yourself Finance is a self-paced, single-user, no-login web course covering the *ideas behind the formulas* of modern finance — the time value of money, financial statements, risk and return, and valuation and corporate finance. Each micro-lecture introduces one concept, grounds it in a real example from business or markets, and asks the student to write the defining formula *in symbols of their own* using the on-screen math keyboard.
+Finance is a self-paced, single-user, no-login web course covering the *ideas behind the formulas* of modern finance — the time value of money, financial statements, risk and return, and valuation and corporate finance. Each micro-lecture introduces one concept, grounds it in a real example from business or markets, and asks the student to write the defining formula *in symbols of their own* using the on-screen math keyboard.
 
 The course runtime provides: lectures at three depths, section-scoped AI tutor, adaptive practice, AI-graded assignments, two-layer AI-authorship detection, and one-click diagnostics.
 

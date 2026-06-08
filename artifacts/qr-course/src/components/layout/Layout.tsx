@@ -85,7 +85,7 @@ export function Sidebar() {
           Sign out
         </button>
         <div className="text-xs text-muted-foreground text-center">
-          Teach Yourself Finance
+          Finance
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-# 💼 Teach Yourself Finance
+# 💼 Finance
 
 **A Four-Week Course on the Ideas Behind the Money — From the Time Value of a Dollar to the WACC of a Whole Company**
 
@@ -6,7 +6,7 @@
 
 ## 🧩 Overview
 
-Teach Yourself Finance is a self-paced, single-user web course that asks the question finance classes usually skip: *why are these formulas the formulas?* What is an interest rate, really? Why must a balance sheet balance? Where does the risk premium come from? Why is the value of any asset always the present value of its future cash flows?
+Finance is a self-paced, single-user web course that asks the question finance classes usually skip: *why are these formulas the formulas?* What is an interest rate, really? Why must a balance sheet balance? Where does the risk premium come from? Why is the value of any asset always the present value of its future cash flows?
 
 The course runtime — lectures with Short / Medium / Long depth, section-scoped AI tutor, adaptive practice, AI-graded homework / tests / midterm / final, two-layer AI-authorship detection, and one-click diagnostics — teaches the conceptual backbone of modern finance: the same backbone every MBA, CFA candidate, and corporate-finance analyst eventually meets, presented in one connected arc.
 
@@ -63,4 +63,4 @@ Most finance courses teach the *recipes* — how to build a DCF, how to compute 
 
 Read the idea, see it grounded in a real example, then write the defining formula in symbols of your own.
 
-**Teach Yourself Finance — read the idea, ground the idea, write the idea.**
+**Finance — read the idea, ground the idea, write the idea.**
