@@ -14,6 +14,7 @@ import { Layout } from "@/components/layout/Layout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { AnswerInput } from "@/components/AnswerInput";
+import { MathChatInput } from "@/components/MathChatInput";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 import {
   ArrowLeft,
@@ -431,37 +432,22 @@ function LiveTutorPane({
           </div>
         )}
       </div>
-      <div className="border-t border-border bg-background p-3 flex gap-2 items-end">
-        <textarea
+      <div className="border-t border-border bg-background p-3">
+        <MathChatInput
           value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              const v = input.trim();
-              if (v) {
-                setInput("");
-                send(v);
-              }
-            }
-          }}
-          placeholder="Ask the tutor for a hint…"
-          rows={2}
-          className="flex-1 bg-secondary border-none rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary resize-y min-h-[56px] max-h-[200px]"
-        />
-        <Button
-          size="lg"
-          onClick={() => {
+          onChange={setInput}
+          onSend={() => {
             const v = input.trim();
             if (v) {
               setInput("");
               send(v);
             }
           }}
-          disabled={!input.trim() || ask.isPending}
-        >
-          <Send className="w-4 h-4" />
-        </Button>
+          placeholder="Ask the tutor for a hint…"
+          pending={ask.isPending}
+          rows={2}
+          minHeightClass="min-h-[56px]"
+        />
       </div>
     </div>
   );
@@ -547,23 +533,16 @@ function FeedbackDialoguePane({
         )}
       </div>
 
-      <div className="border-t border-border bg-background p-3 flex gap-2 items-end">
-        <textarea
+      <div className="border-t border-border bg-background p-3">
+        <MathChatInput
           value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              send();
-            }
-          }}
+          onChange={setInput}
+          onSend={send}
           placeholder="Ask about this feedback…"
+          pending={post.isPending}
           rows={2}
-          className="flex-1 bg-secondary border-none rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary resize-y min-h-[56px] max-h-[200px]"
+          minHeightClass="min-h-[56px]"
         />
-        <Button size="lg" onClick={send} disabled={!input.trim() || post.isPending}>
-          <Send className="w-4 h-4" />
-        </Button>
       </div>
     </div>
   );
