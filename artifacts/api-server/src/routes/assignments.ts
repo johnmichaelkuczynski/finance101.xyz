@@ -18,6 +18,8 @@ import {
 } from "@workspace/api-zod";
 import { gradeAnswer } from "../lib/grading";
 import { detect } from "../lib/detection";
+import { getUserId } from "../lib/userId";
+import { recordTopicResult, logActivity } from "../lib/profile";
 
 const router: IRouter = Router();
 
@@ -26,7 +28,8 @@ function parseIdParam(raw: unknown): number {
   return parseInt(s ?? "", 10);
 }
 
-router.get("/assignments", async (_req, res) => {
+router.get("/assignments", async (req, res) => {
+  const userId = getUserId(req);
   const rows = await db
     .select()
     .from(assignmentsTable)
@@ -40,7 +43,7 @@ router.get("/assignments", async (_req, res) => {
       const attempts = await db
         .select()
         .from(attemptsTable)
-        .where(eq(attemptsTable.assignmentId, a.id))
+        .where(and(eq(attemptsTable.assignmentId, a.id), eq(attemptsTable.userId, userId)))
         .orderBy(asc(attemptsTable.id));
       const submitted = attempts.filter((x) => x.status === "submitted");
       const inProgress = attempts.find((x) => x.status === "in_progress");
@@ -109,11 +112,11 @@ router.get("/assignments/:assignmentId", async (req, res): Promise<void> => {
   );
 });
 
-async function loadAttempt(attemptId: number) {
+async function loadAttempt(attemptId: number, userId: string) {
   const [attempt] = await db
     .select()
     .from(attemptsTable)
-    .where(eq(attemptsTable.id, attemptId));
+    .where(and(eq(attemptsTable.id, attemptId), eq(attemptsTable.userId, userId)));
   if (!attempt) return null;
   const answers = await db
     .select()
@@ -147,13 +150,21 @@ router.post("/assignments/:assignmentId/start", async (req, res): Promise<void> 
     return;
   }
 
-  // Resume any in-progress attempt
+  const userId = getUserId(req);
+
+  // Resume this user's own in-progress attempt
   const [existing] = await db
     .select()
     .from(attemptsTable)
-    .where(and(eq(attemptsTable.assignmentId, id), eq(attemptsTable.status, "in_progress")));
+    .where(
+      and(
+        eq(attemptsTable.assignmentId, id),
+        eq(attemptsTable.userId, userId),
+        eq(attemptsTable.status, "in_progress"),
+      ),
+    );
   if (existing) {
-    const state = await loadAttempt(existing.id);
+    const state = await loadAttempt(existing.id, userId);
     res.json(StartAssignmentAttemptResponse.parse(state));
     return;
   }
@@ -164,13 +175,13 @@ router.post("/assignments/:assignmentId/start", async (req, res): Promise<void> 
       : null;
   const [created] = await db
     .insert(attemptsTable)
-    .values({ assignmentId: id, status: "in_progress", deadlineAt })
+    .values({ assignmentId: id, userId, status: "in_progress", deadlineAt })
     .returning();
   if (!created) {
     res.status(500).json({ error: "failed to create" });
     return;
   }
-  const state = await loadAttempt(created.id);
+  const state = await loadAttempt(created.id, userId);
   res.json(StartAssignmentAttemptResponse.parse(state));
 });
 
@@ -180,7 +191,7 @@ router.get("/assignments/attempts/:attemptId", async (req, res): Promise<void> =
     res.status(400).json({ error: "invalid id" });
     return;
   }
-  const state = await loadAttempt(id);
+  const state = await loadAttempt(id, getUserId(req));
   if (!state) {
     res.status(404).json({ error: "attempt not found" });
     return;
@@ -204,7 +215,7 @@ router.put("/assignments/attempts/:attemptId/answer", async (req, res): Promise<
   const [attempt] = await db
     .select()
     .from(attemptsTable)
-    .where(eq(attemptsTable.id, id));
+    .where(and(eq(attemptsTable.id, id), eq(attemptsTable.userId, getUserId(req))));
   if (!attempt) {
     res.status(404).json({ error: "attempt not found" });
     return;
@@ -249,12 +260,17 @@ router.post("/assignments/attempts/:attemptId/submit", async (req, res): Promise
     res.status(400).json({ error: "invalid id" });
     return;
   }
+  const userId = getUserId(req);
   const [attempt] = await db
     .select()
     .from(attemptsTable)
-    .where(eq(attemptsTable.id, id));
+    .where(and(eq(attemptsTable.id, id), eq(attemptsTable.userId, userId)));
   if (!attempt) {
     res.status(404).json({ error: "attempt not found" });
+    return;
+  }
+  if (attempt.status !== "in_progress") {
+    res.status(400).json({ error: "attempt already submitted" });
     return;
   }
   const problems = await db
@@ -327,6 +343,24 @@ router.post("/assignments/attempts/:attemptId/submit", async (req, res): Promise
       scorePercent: percent,
     })
     .where(eq(attemptsTable.id, id));
+
+  // Feed the evolving per-user profile from the graded attempt too.
+  for (const r of perProblem) {
+    const p = problems.find((x) => x.id === r.problemId);
+    if (!p) continue;
+    await recordTopicResult({
+      userId,
+      topicId: p.topicId,
+      correct: r.correct,
+      score: r.correct ? 1 : 0,
+    });
+  }
+  await logActivity({
+    userId,
+    kind: "graded_submitted",
+    refId: id,
+    score: percent / 100,
+  });
 
   res.json(
     SubmitAttemptResponse.parse({

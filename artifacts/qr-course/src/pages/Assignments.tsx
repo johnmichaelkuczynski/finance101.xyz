@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { PracticeLauncher } from "@/components/PracticeLauncher";
 
 export default function Assignments() {
   const { data: assignments, isLoading } = useListAssignments();
@@ -61,12 +62,15 @@ export default function Assignments() {
                             <span className="font-semibold text-foreground">Score: {item.bestScore}%</span>
                           )}
                         </div>
-                        <Link href={`/assignments/${item.id}`}>
-                          <Button className="w-full" variant={item.status === 'submitted' ? "outline" : "default"}>
-                            {item.status === 'submitted' ? 'Review Results' : 
-                             item.status === 'in_progress' ? 'Resume' : 'Start'}
-                          </Button>
-                        </Link>
+                        <div className="flex gap-2">
+                          <Link href={`/assignments/${item.id}`} className="flex-1">
+                            <Button className="w-full" variant={item.status === 'submitted' ? "outline" : "default"}>
+                              {item.status === 'submitted' ? 'Review Results' : 
+                               item.status === 'in_progress' ? 'Resume' : 'Start'}
+                            </Button>
+                          </Link>
+                          <PracticeLauncher sourceAssignmentId={item.id} variant="inline" />
+                        </div>
                       </CardContent>
                     </Card>
                   ))}

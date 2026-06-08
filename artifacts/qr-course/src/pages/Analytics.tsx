@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 import { useLocation } from "wouter";
 import { ChevronRight } from "lucide-react";
+import { ReadinessPanel } from "@/components/ReadinessPanel";
 
 export default function Analytics() {
   const { data: summary, isLoading: isLoadingSummary } = useGetAnalyticsSummary();
@@ -68,6 +69,8 @@ export default function Analytics() {
             </CardContent>
           </Card>
         )}
+
+        <ReadinessPanel />
 
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <StatCard title="Course Average" value={summary?.officialAverage ? `${summary.officialAverage}%` : '-'} loading={isLoadingSummary} />

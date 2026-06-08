@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AnswerInput } from "@/components/AnswerInput";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
+import { PracticeLauncher } from "@/components/PracticeLauncher";
 
 export default function AssignmentRunner() {
   const params = useParams();
@@ -106,7 +107,9 @@ export default function AssignmentRunner() {
               <Button variant="outline">Back to Assignments</Button>
             </Link>
           </div>
-          
+
+          <PracticeLauncher sourceAssignmentId={assignmentId} />
+
           <div className="flex flex-col gap-6">
             {result.perProblem.map((pr, idx) => (
               <div key={pr.problemId} className={`p-6 rounded-lg border ${pr.correct ? 'border-chart-2/50 bg-chart-2/5' : 'border-destructive/50 bg-destructive/5'}`}>

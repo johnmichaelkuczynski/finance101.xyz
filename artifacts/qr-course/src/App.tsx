@@ -31,6 +31,7 @@ import Analytics from "@/pages/Analytics";
 import WeekView from "@/pages/WeekView";
 import LectureView from "@/pages/LectureView";
 import AssignmentRunner from "@/pages/AssignmentRunner";
+import PracticeAssignmentRunner from "@/pages/PracticeAssignmentRunner";
 import Diagnostics from "@/pages/Diagnostics";
 import TopicPractice from "@/pages/TopicPractice";
 
@@ -227,6 +228,9 @@ function ClerkProviderWithRoutes() {
             </Route>
             <Route path="/assignments/:id">
               <Protected component={AssignmentRunner} />
+            </Route>
+            <Route path="/practice-assignments/:id">
+              <Protected component={PracticeAssignmentRunner} />
             </Route>
             <Route path="/analytics">
               <Protected component={Analytics} />

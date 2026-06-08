@@ -444,3 +444,238 @@ export const GenerateReportResponse = zod.object({
 })
 
 
+/**
+ * @summary List the signed-in user's practice assignments (optionally for one source assignment)
+ */
+export const ListPracticeAssignmentsQueryParams = zod.object({
+  "sourceAssignmentId": zod.coerce.number().optional()
+})
+
+export const ListPracticeAssignmentsResponseItem = zod.object({
+  "id": zod.number(),
+  "sourceAssignmentId": zod.number(),
+  "kind": zod.enum(['homework', 'test', 'midterm', 'final']),
+  "title": zod.string(),
+  "weekNumber": zod.number(),
+  "status": zod.enum(['in_progress', 'submitted']),
+  "scorePercent": zod.number().nullish(),
+  "problemCount": zod.number(),
+  "createdAt": zod.coerce.date()
+})
+export const ListPracticeAssignmentsResponse = zod.array(ListPracticeAssignmentsResponseItem)
+
+
+/**
+ * @summary Generate a fresh practice version of a graded assignment (no repeats, no overlap with the real problems)
+ */
+export const GeneratePracticeAssignmentBody = zod.object({
+  "sourceAssignmentId": zod.number().describe('The graded assignment to build a fresh practice version of.')
+})
+
+export const GeneratePracticeAssignmentResponse = zod.object({
+  "id": zod.number(),
+  "sourceAssignmentId": zod.number(),
+  "kind": zod.enum(['homework', 'test', 'midterm', 'final']),
+  "title": zod.string(),
+  "weekNumber": zod.number(),
+  "status": zod.enum(['in_progress', 'submitted']),
+  "scorePercent": zod.number().nullish(),
+  "instructions": zod.string().nullable(),
+  "problems": zod.array(zod.object({
+  "id": zod.number(),
+  "position": zod.number(),
+  "prompt": zod.string(),
+  "topicId": zod.number(),
+  "topicTitle": zod.string().nullish(),
+  "hint": zod.string().nullish(),
+  "difficulty": zod.number()
+})),
+  "answers": zod.array(zod.object({
+  "problemId": zod.number(),
+  "answer": zod.string(),
+  "correct": zod.boolean().nullish(),
+  "score": zod.number().nullish(),
+  "feedback": zod.string().nullish(),
+  "whatWasRight": zod.string().nullish(),
+  "whatToFix": zod.string().nullish(),
+  "conceptTip": zod.string().nullish(),
+  "correctAnswer": zod.string().nullish(),
+  "explanation": zod.string().nullish()
+}))
+})
+
+
+/**
+ * @summary Get a practice assignment with its problems, saved answers, and feedback
+ */
+export const GetPracticeAssignmentParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetPracticeAssignmentResponse = zod.object({
+  "id": zod.number(),
+  "sourceAssignmentId": zod.number(),
+  "kind": zod.enum(['homework', 'test', 'midterm', 'final']),
+  "title": zod.string(),
+  "weekNumber": zod.number(),
+  "status": zod.enum(['in_progress', 'submitted']),
+  "scorePercent": zod.number().nullish(),
+  "instructions": zod.string().nullable(),
+  "problems": zod.array(zod.object({
+  "id": zod.number(),
+  "position": zod.number(),
+  "prompt": zod.string(),
+  "topicId": zod.number(),
+  "topicTitle": zod.string().nullish(),
+  "hint": zod.string().nullish(),
+  "difficulty": zod.number()
+})),
+  "answers": zod.array(zod.object({
+  "problemId": zod.number(),
+  "answer": zod.string(),
+  "correct": zod.boolean().nullish(),
+  "score": zod.number().nullish(),
+  "feedback": zod.string().nullish(),
+  "whatWasRight": zod.string().nullish(),
+  "whatToFix": zod.string().nullish(),
+  "conceptTip": zod.string().nullish(),
+  "correctAnswer": zod.string().nullish(),
+  "explanation": zod.string().nullish()
+}))
+})
+
+
+/**
+ * @summary Save (or update) a single answer on a practice assignment
+ */
+export const SavePracticeAssignmentAnswerParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const SavePracticeAssignmentAnswerBody = zod.object({
+  "problemId": zod.number(),
+  "answer": zod.string()
+})
+
+export const SavePracticeAssignmentAnswerResponse = zod.object({
+  "ok": zod.boolean()
+})
+
+
+/**
+ * @summary Grade a practice assignment with detailed feedback and update the user's profile
+ */
+export const SubmitPracticeAssignmentParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const SubmitPracticeAssignmentResponse = zod.object({
+  "id": zod.number(),
+  "score": zod.number(),
+  "total": zod.number(),
+  "percent": zod.number(),
+  "overallFeedback": zod.string().nullish(),
+  "perProblem": zod.array(zod.object({
+  "problemId": zod.number(),
+  "correct": zod.boolean(),
+  "score": zod.number(),
+  "userAnswer": zod.string(),
+  "correctAnswer": zod.string(),
+  "explanation": zod.string(),
+  "feedback": zod.string(),
+  "whatWasRight": zod.string().nullish(),
+  "whatToFix": zod.string().nullish(),
+  "conceptTip": zod.string().nullish(),
+  "topicId": zod.number().optional(),
+  "topicTitle": zod.string().nullish()
+}))
+})
+
+
+/**
+ * @summary Get the full feedback dialogue thread for a practice assignment
+ */
+export const GetFeedbackMessagesParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetFeedbackMessagesResponseItem = zod.object({
+  "id": zod.number(),
+  "role": zod.enum(['user', 'tutor']),
+  "content": zod.string(),
+  "problemId": zod.number().nullish(),
+  "createdAt": zod.coerce.date()
+})
+export const GetFeedbackMessagesResponse = zod.array(GetFeedbackMessagesResponseItem)
+
+
+/**
+ * @summary Ask the app a follow-up question about the feedback on a practice problem
+ */
+export const PostFeedbackMessageParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const PostFeedbackMessageBody = zod.object({
+  "problemId": zod.number().nullish(),
+  "message": zod.string()
+})
+
+export const PostFeedbackMessageResponse = zod.object({
+  "id": zod.number(),
+  "role": zod.enum(['user', 'tutor']),
+  "content": zod.string(),
+  "problemId": zod.number().nullish(),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary The signed-in user's evolving per-topic mastery profile
+ */
+export const GetProfileTopicsResponseItem = zod.object({
+  "topicId": zod.number(),
+  "topicTitle": zod.string(),
+  "weekNumber": zod.number(),
+  "attempts": zod.number(),
+  "accuracy": zod.number(),
+  "avgScore": zod.number(),
+  "masteryLabel": zod.enum(['mastered', 'strong', 'developing', 'shaky', 'weak', 'untested']),
+  "lastPracticedAt": zod.coerce.date().nullish()
+})
+export const GetProfileTopicsResponse = zod.array(GetProfileTopicsResponseItem)
+
+
+/**
+ * @summary Surgically precise, analytics-based pointers on what to focus on before a graded assignment
+ */
+export const GenerateAssignmentReadinessBody = zod.object({
+  "assignmentId": zod.number()
+})
+
+export const GenerateAssignmentReadinessResponse = zod.object({
+  "assignmentId": zod.number(),
+  "assignmentTitle": zod.string(),
+  "readinessScore": zod.number(),
+  "readinessLabel": zod.enum(['ready', 'almost', 'keep_practicing', 'not_ready']),
+  "headline": zod.string(),
+  "practiceCount": zod.number(),
+  "pointers": zod.array(zod.object({
+  "topicId": zod.number().nullish(),
+  "topicTitle": zod.string().nullish(),
+  "severity": zod.enum(['focus', 'review', 'solid']),
+  "text": zod.string()
+})),
+  "topics": zod.array(zod.object({
+  "topicId": zod.number(),
+  "topicTitle": zod.string(),
+  "weekNumber": zod.number(),
+  "attempts": zod.number(),
+  "accuracy": zod.number(),
+  "avgScore": zod.number(),
+  "masteryLabel": zod.enum(['mastered', 'strong', 'developing', 'shaky', 'weak', 'untested']),
+  "lastPracticedAt": zod.coerce.date().nullish()
+}))
+})
+
+
