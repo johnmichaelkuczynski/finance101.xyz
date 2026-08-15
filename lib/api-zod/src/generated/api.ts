@@ -433,6 +433,32 @@ export const GetRecentActivityResponse = zod.array(GetRecentActivityResponseItem
 
 
 /**
+ * @summary Record a unique-visitor beacon (public)
+ */
+export const RecordVisitResponse = zod.object({
+  "ok": zod.boolean()
+})
+
+
+/**
+ * @summary Unique visitor counts (admin only)
+ */
+export const GetVisitorStatsResponse = zod.object({
+  "uniqueVisitors": zod.number(),
+  "guests": zod.number(),
+  "signedIn": zod.number()
+})
+
+
+/**
+ * @summary Download the course (short lectures + sample homework and exam problems) as PDF or TXT
+ */
+export const DownloadCourseQueryParams = zod.object({
+  "format": zod.enum(['pdf', 'txt']).optional()
+})
+
+
+/**
  * @summary Generate a narrative strengths/weaknesses report
  */
 export const GenerateReportResponse = zod.object({

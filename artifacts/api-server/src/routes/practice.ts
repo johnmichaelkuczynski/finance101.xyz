@@ -16,6 +16,7 @@ import {
   GradePracticeAnswerResponse,
 } from "@workspace/api-zod";
 import { chatJson } from "../lib/ai";
+import { getUserId } from "../lib/userId";
 import { gradeAnswer } from "../lib/grading";
 
 const router: IRouter = Router();
@@ -78,6 +79,7 @@ router.post("/practice/sessions", async (req, res): Promise<void> => {
   const [created] = await db
     .insert(practiceSessionsTable)
     .values({
+      userId: getUserId(req) || null,
       weekNumber: weekNumber ?? null,
       topicId: topicId ?? null,
       tutorEnabled,
@@ -111,7 +113,12 @@ router.post("/practice/sessions/:sessionId/next", async (req, res): Promise<void
   const [session] = await db
     .select()
     .from(practiceSessionsTable)
-    .where(eq(practiceSessionsTable.id, sessionId));
+    .where(
+      and(
+        eq(practiceSessionsTable.id, sessionId),
+        eq(practiceSessionsTable.userId, getUserId(req)),
+      ),
+    );
   if (!session) {
     res.status(404).json({ error: "session not found" });
     return;
@@ -215,7 +222,12 @@ router.post("/practice/sessions/:sessionId/grade", async (req, res): Promise<voi
   const [session] = await db
     .select()
     .from(practiceSessionsTable)
-    .where(eq(practiceSessionsTable.id, sessionId));
+    .where(
+      and(
+        eq(practiceSessionsTable.id, sessionId),
+        eq(practiceSessionsTable.userId, getUserId(req)),
+      ),
+    );
   if (!session) {
     res.status(404).json({ error: "session not found" });
     return;
@@ -241,6 +253,7 @@ router.post("/practice/sessions/:sessionId/grade", async (req, res): Promise<voi
   });
 
   await db.insert(practiceAttemptsTable).values({
+    userId: getUserId(req) || null,
     sessionId,
     problemId,
     topicId: problem.topicId,

@@ -1,12 +1,16 @@
 import { Router, type IRouter } from "express";
-import { asc, desc, eq, sql } from "drizzle-orm";
+import { and, asc, desc, eq, sql } from "drizzle-orm";
+import { getAuth, clerkClient } from "@clerk/express";
 import {
   db,
   topicsTable,
   attemptsTable,
   practiceAttemptsTable,
   assignmentsTable,
+  visitorsTable,
 } from "@workspace/db";
+import type { IdentifiedRequest } from "../middlewares/identify";
+import { getUserId } from "../lib/userId";
 import {
   GetAnalyticsSummaryResponse,
   GetTopicAnalyticsResponse,
@@ -17,6 +21,49 @@ import { chatJson } from "../lib/ai";
 
 const router: IRouter = Router();
 
+const ADMIN_EMAIL = "johnmichaelkuczynski@gmail.com";
+
+// Public beacon: the frontend pings this on load. The identify middleware has
+// already upserted the visitor row, so this simply acknowledges.
+router.post("/analytics/visit", (_req, res) => {
+  res.json({ ok: true });
+});
+
+// Admin-only: unique visitor counts, visible only to the course owner.
+router.get("/analytics/visitors", async (req, res) => {
+  const r = req as IdentifiedRequest;
+  const auth = getAuth(req);
+  const clerkUserId = auth?.userId;
+  if (r.isGuest || !clerkUserId) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+  let email: string | undefined;
+  try {
+    const user = await clerkClient.users.getUser(clerkUserId);
+    email = user.emailAddresses.find(
+      (e) => e.id === user.primaryEmailAddressId,
+    )?.emailAddress;
+  } catch {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  if (email?.toLowerCase() !== ADMIN_EMAIL) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  const rows = await db
+    .select({
+      kind: visitorsTable.kind,
+      n: sql<number>`count(*)::int`,
+    })
+    .from(visitorsTable)
+    .groupBy(visitorsTable.kind);
+  const guests = rows.find((x) => x.kind === "guest")?.n ?? 0;
+  const signedIn = rows.find((x) => x.kind === "user")?.n ?? 0;
+  res.json({ uniqueVisitors: guests + signedIn, guests, signedIn });
+});
+
 type StrengthLabel = "strong" | "solid" | "developing" | "weak" | "untested";
 function labelFor(accuracy: number, attempts: number): StrengthLabel {
   if (attempts === 0) return "untested";
@@ -26,14 +73,14 @@ function labelFor(accuracy: number, attempts: number): StrengthLabel {
   return "weak";
 }
 
-async function topicStats() {
+async function topicStats(userId: string) {
   const topics = await db
     .select()
     .from(topicsTable)
     .orderBy(asc(topicsTable.position));
   const stats = await db.execute(sql`
     select topic_id, count(*)::int as n, avg(case when correct then 1.0 else 0.0 end) as acc
-    from practice_attempts group by topic_id
+    from practice_attempts where user_id = ${userId} group by topic_id
   `);
   const byId = new Map<number, { n: number; acc: number }>();
   for (const r of stats.rows as Array<{ topic_id: number; n: number; acc: number }>) {
@@ -54,17 +101,23 @@ async function topicStats() {
   });
 }
 
-router.get("/analytics/summary", async (_req, res) => {
+router.get("/analytics/summary", async (req, res) => {
+  const userId = getUserId(req);
   const submitted = await db
     .select()
     .from(attemptsTable)
-    .where(eq(attemptsTable.status, "submitted"));
+    .where(
+      and(eq(attemptsTable.status, "submitted"), eq(attemptsTable.userId, userId)),
+    );
   const officialAverage =
     submitted.length === 0
       ? 0
       : submitted.reduce((s, a) => s + (a.scorePercent ?? 0), 0) / submitted.length;
 
-  const practice = await db.select().from(practiceAttemptsTable);
+  const practice = await db
+    .select()
+    .from(practiceAttemptsTable)
+    .where(eq(practiceAttemptsTable.userId, userId));
   const practiceCorrect = practice.filter((p) => p.correct).length;
   const practiceAccuracy =
     practice.length === 0 ? 0 : (practiceCorrect / practice.length) * 100;
@@ -85,7 +138,7 @@ router.get("/analytics/summary", async (_req, res) => {
     else if (i > 0) break;
   }
 
-  const topics = await topicStats();
+  const topics = await topicStats(userId);
   const tested = topics.filter((t) => t.attempts > 0);
   tested.sort((a, b) => b.accuracy - a.accuracy);
   const strongest = tested[0]?.topicTitle ?? null;
@@ -104,12 +157,13 @@ router.get("/analytics/summary", async (_req, res) => {
   );
 });
 
-router.get("/analytics/topics", async (_req, res) => {
-  const rows = await topicStats();
+router.get("/analytics/topics", async (req, res) => {
+  const rows = await topicStats(getUserId(req));
   res.json(GetTopicAnalyticsResponse.parse(rows));
 });
 
-router.get("/analytics/activity", async (_req, res) => {
+router.get("/analytics/activity", async (req, res) => {
+  const userId = getUserId(req);
   const recentPractice = await db
     .select({
       id: practiceAttemptsTable.id,
@@ -118,6 +172,7 @@ router.get("/analytics/activity", async (_req, res) => {
       topicId: practiceAttemptsTable.topicId,
     })
     .from(practiceAttemptsTable)
+    .where(eq(practiceAttemptsTable.userId, userId))
     .orderBy(desc(practiceAttemptsTable.id))
     .limit(20);
   const topics = await db.select().from(topicsTable);
@@ -131,7 +186,9 @@ router.get("/analytics/activity", async (_req, res) => {
       assignmentId: attemptsTable.assignmentId,
     })
     .from(attemptsTable)
-    .where(eq(attemptsTable.status, "submitted"))
+    .where(
+      and(eq(attemptsTable.status, "submitted"), eq(attemptsTable.userId, userId)),
+    )
     .orderBy(desc(attemptsTable.id))
     .limit(20);
   const assignments = await db.select().from(assignmentsTable);
@@ -159,12 +216,15 @@ router.get("/analytics/activity", async (_req, res) => {
   res.json(GetRecentActivityResponse.parse(items.slice(0, 30)));
 });
 
-router.post("/analytics/report", async (_req, res) => {
-  const topics = await topicStats();
+router.post("/analytics/report", async (req, res) => {
+  const userId = getUserId(req);
+  const topics = await topicStats(userId);
   const submitted = await db
     .select()
     .from(attemptsTable)
-    .where(eq(attemptsTable.status, "submitted"));
+    .where(
+      and(eq(attemptsTable.status, "submitted"), eq(attemptsTable.userId, userId)),
+    );
   const officialAverage =
     submitted.length === 0
       ? 0

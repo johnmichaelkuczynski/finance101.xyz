@@ -1,5 +1,6 @@
 import { useLocation } from "wouter";
 import { ArrowRight, BookOpen, LineChart, Calculator, Brain } from "lucide-react";
+import { TopicsList } from "@/components/TopicsList";
 
 const weeks = [
   {
@@ -75,7 +76,12 @@ export default function Landing() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-6 flex gap-8 items-start">
+        <div className="hidden md:block pt-6 sticky top-0 max-h-screen overflow-y-auto pb-8">
+          <TopicsList />
+        </div>
+
+      <main className="flex-1 min-w-0">
         <section className="py-16 md:py-24 text-center max-w-3xl mx-auto">
           <p className="text-sm font-medium tracking-wide uppercase text-muted-foreground mb-4">
             A four-week course on the ideas behind the money
@@ -91,11 +97,11 @@ export default function Landing() {
           </p>
           <div className="flex items-center justify-center gap-3">
             <button
-              onClick={() => setLocation("/sign-up")}
+              onClick={() => setLocation("/dashboard")}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-md text-base font-medium bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
               data-testid="button-start"
             >
-              Start the course
+              Start the course — no sign-up needed
               <ArrowRight className="w-4 h-4" />
             </button>
             <button
@@ -143,7 +149,12 @@ export default function Landing() {
             ))}
           </div>
         </section>
+
+        <section className="md:hidden pb-16">
+          <TopicsList className="mx-auto" />
+        </section>
       </main>
+      </div>
 
       <footer className="border-t border-border py-6 text-center text-sm text-muted-foreground">
         Finance — read the idea, ground the idea, write the idea.

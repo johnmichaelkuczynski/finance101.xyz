@@ -96,6 +96,7 @@ export const answersTable = pgTable("answers", {
 
 export const practiceSessionsTable = pgTable("practice_sessions", {
   id: serial("id").primaryKey(),
+  userId: text("user_id"),
   weekNumber: integer("week_number"),
   topicId: integer("topic_id"),
   tutorEnabled: boolean("tutor_enabled").notNull().default(false),
@@ -119,6 +120,7 @@ export const practiceProblemsTable = pgTable("practice_problems", {
 
 export const practiceAttemptsTable = pgTable("practice_attempts", {
   id: serial("id").primaryKey(),
+  userId: text("user_id"),
   sessionId: integer("session_id")
     .notNull()
     .references(() => practiceSessionsTable.id, { onDelete: "cascade" }),

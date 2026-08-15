@@ -1,10 +1,45 @@
 import React from "react";
-import { useGetCourseOverview, useGetRecentActivity } from "@workspace/api-client-react";
+import {
+  useGetCourseOverview,
+  useGetRecentActivity,
+  useGetVisitorStats,
+  getGetVisitorStatsQueryKey,
+} from "@workspace/api-client-react";
+import { useUser } from "@clerk/react";
+import { Eye } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
+import { TopicsList } from "@/components/TopicsList";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
+
+const ADMIN_EMAIL = "johnmichaelkuczynski@gmail.com";
+
+// Unique visitor count, visible only to the course owner's account.
+function AdminVisitorCount() {
+  const { user } = useUser();
+  const isAdmin =
+    user?.primaryEmailAddress?.emailAddress?.toLowerCase() === ADMIN_EMAIL;
+  const { data } = useGetVisitorStats({
+    query: {
+      enabled: isAdmin,
+      retry: false,
+      queryKey: getGetVisitorStatsQueryKey(),
+    },
+  });
+  if (!isAdmin || !data) return null;
+  return (
+    <div
+      className="inline-flex items-center gap-2 text-xs text-muted-foreground border border-border rounded-md px-2.5 py-1.5 bg-card w-fit"
+      data-testid="text-visitor-count"
+      title={`${data.guests} guests, ${data.signedIn} signed in`}
+    >
+      <Eye className="w-3.5 h-3.5" />
+      {data.uniqueVisitors} unique visitors
+    </div>
+  );
+}
 
 export default function Dashboard() {
   const { data: overview, isLoading: isLoadingOverview } = useGetCourseOverview();
@@ -12,12 +47,19 @@ export default function Dashboard() {
 
   return (
     <Layout>
-      <div className="p-8 max-w-6xl mx-auto w-full flex flex-col gap-8">
+      <div className="p-8 max-w-7xl mx-auto w-full flex gap-8 items-start">
+        <div className="hidden lg:block sticky top-16">
+          <TopicsList />
+        </div>
+      <div className="flex-1 min-w-0 flex flex-col gap-8">
         <div>
           <h1 className="text-3xl font-serif font-bold text-primary mb-2">
             {overview ? overview.title : <Skeleton className="h-9 w-64" />}
           </h1>
           <p className="text-muted-foreground">Welcome to Finance.</p>
+          <div className="mt-2">
+            <AdminVisitorCount />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -101,6 +143,7 @@ export default function Dashboard() {
             </Card>
           </div>
         </div>
+      </div>
       </div>
     </Layout>
   );

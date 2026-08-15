@@ -5,6 +5,16 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+export interface VisitAck {
+  ok: boolean;
+}
+
+export interface VisitorStats {
+  uniqueVisitors: number;
+  guests: number;
+  signedIn: number;
+}
+
 export interface HealthStatus {
   status: string;
 }
@@ -576,6 +586,18 @@ export interface AssignmentReadiness {
   pointers: ReadinessPointer[];
   topics: ProfileTopicStat[];
 }
+
+export type DownloadCourseParams = {
+format?: DownloadCourseFormat;
+};
+
+export type DownloadCourseFormat = typeof DownloadCourseFormat[keyof typeof DownloadCourseFormat];
+
+
+export const DownloadCourseFormat = {
+  pdf: 'pdf',
+  txt: 'txt',
+} as const;
 
 export type ListPracticeAssignmentsParams = {
 sourceAssignmentId?: number;

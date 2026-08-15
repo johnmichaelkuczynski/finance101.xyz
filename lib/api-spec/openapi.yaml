@@ -363,6 +363,56 @@ paths:
                 items:
                   $ref: "#/components/schemas/ActivityItem"
 
+  /analytics/visit:
+    post:
+      operationId: recordVisit
+      tags: [analytics]
+      summary: Record a unique-visitor beacon (public)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VisitAck"
+
+  /analytics/visitors:
+    get:
+      operationId: getVisitorStats
+      tags: [analytics]
+      summary: Unique visitor counts (admin only)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VisitorStats"
+
+  /course/download:
+    get:
+      operationId: downloadCourse
+      tags: [course]
+      summary: Download the course (short lectures + sample homework and exam problems) as PDF or TXT
+      parameters:
+        - name: format
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [pdf, txt]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            text/plain:
+              schema:
+                type: string
+
   /analytics/report:
     post:
       operationId: generateReport
@@ -551,6 +601,20 @@ paths:
 
 components:
   schemas:
+    VisitAck:
+      type: object
+      properties:
+        ok: { type: boolean }
+      required: [ok]
+
+    VisitorStats:
+      type: object
+      properties:
+        uniqueVisitors: { type: integer }
+        guests: { type: integer }
+        signedIn: { type: integer }
+      required: [uniqueVisitors, guests, signedIn]
+
     HealthStatus:
       type: object
       properties:

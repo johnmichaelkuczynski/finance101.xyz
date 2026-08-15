@@ -18,9 +18,12 @@ import {
 import {
   QueryClient,
   QueryClientProvider,
+  QueryCache,
+  MutationCache,
   useQueryClient,
 } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
+import { LoginGate, emitLoginRequired } from "@/components/LoginGate";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 
@@ -35,7 +38,25 @@ import PracticeAssignmentRunner from "@/pages/PracticeAssignmentRunner";
 import Diagnostics from "@/pages/Diagnostics";
 import TopicPractice from "@/pages/TopicPractice";
 
-const queryClient = new QueryClient();
+// A guest who exhausts the free AI sample gets 401 LOGIN_REQUIRED from the
+// server; surface the sign-in prompt globally instead of failing silently.
+function isLoginRequired(err: unknown): boolean {
+  const e = err as { status?: number; data?: { error?: string } } | null;
+  return e?.status === 401 && e?.data?.error === "LOGIN_REQUIRED";
+}
+
+const queryClient = new QueryClient({
+  queryCache: new QueryCache({
+    onError: (err) => {
+      if (isLoginRequired(err)) emitLoginRequired();
+    },
+  }),
+  mutationCache: new MutationCache({
+    onError: (err) => {
+      if (isLoginRequired(err)) emitLoginRequired();
+    },
+  }),
+});
 
 // REQUIRED — copy verbatim. Resolves the key from window.location.hostname so the
 // same build serves multiple Clerk custom domains.
@@ -152,18 +173,19 @@ function HomeRedirect() {
   );
 }
 
-// Wraps an authenticated-only page; signed-out users are sent to the landing page.
-function Protected({ component: Component }: { component: React.ComponentType }) {
-  return (
-    <>
-      <Show when="signed-in">
-        <Component />
-      </Show>
-      <Show when="signed-out">
-        <Redirect to="/" />
-      </Show>
-    </>
-  );
+// No login wall: every page is open. Guests may browse the whole course and
+// sample the AI features; the server enforces the free-sample limit and the
+// LoginGate dialog prompts Google sign-in when it's hit.
+
+// Fires the unique-visitor beacon once per app load.
+function VisitBeacon() {
+  useEffect(() => {
+    void fetch(`${basePath}/api/analytics/visit`, {
+      method: "POST",
+      credentials: "include",
+    }).catch(() => {});
+  }, []);
+  return null;
 }
 
 // Invalidate the React Query cache when the signed-in user changes.
@@ -221,34 +243,24 @@ function ClerkProviderWithRoutes() {
         <TooltipProvider>
           <Switch>
             <Route path="/" component={HomeRedirect} />
+            <Route path="/dashboard" component={Dashboard} />
             <Route path="/sign-in/*?" component={SignInPage} />
             <Route path="/sign-up/*?" component={SignUpPage} />
-            <Route path="/assignments">
-              <Protected component={Assignments} />
-            </Route>
-            <Route path="/assignments/:id">
-              <Protected component={AssignmentRunner} />
-            </Route>
-            <Route path="/practice-assignments/:id">
-              <Protected component={PracticeAssignmentRunner} />
-            </Route>
-            <Route path="/analytics">
-              <Protected component={Analytics} />
-            </Route>
-            <Route path="/diagnostics">
-              <Protected component={Diagnostics} />
-            </Route>
-            <Route path="/weeks/:weekNumber">
-              <Protected component={WeekView} />
-            </Route>
-            <Route path="/lectures/:lectureId">
-              <Protected component={LectureView} />
-            </Route>
-            <Route path="/practice/topic/:topicId">
-              <Protected component={TopicPractice} />
-            </Route>
+            <Route path="/assignments" component={Assignments} />
+            <Route path="/assignments/:id" component={AssignmentRunner} />
+            <Route
+              path="/practice-assignments/:id"
+              component={PracticeAssignmentRunner}
+            />
+            <Route path="/analytics" component={Analytics} />
+            <Route path="/diagnostics" component={Diagnostics} />
+            <Route path="/weeks/:weekNumber" component={WeekView} />
+            <Route path="/lectures/:lectureId" component={LectureView} />
+            <Route path="/practice/topic/:topicId" component={TopicPractice} />
             <Route component={NotFound} />
           </Switch>
+          <VisitBeacon />
+          <LoginGate />
           <Toaster />
         </TooltipProvider>
       </QueryClientProvider>
