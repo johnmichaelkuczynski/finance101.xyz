@@ -18,6 +18,7 @@ import { StarterQuestionCard } from "@/components/StarterQuestionCard";
 import { MathChatInput } from "@/components/MathChatInput";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, MessageSquare, Sparkles, Send, X, RefreshCw, CheckCircle2, XCircle } from "lucide-react";
+import { emitLoginRequired } from "@/components/LoginGate";
 
 type ChatMsg = { role: "user" | "tutor"; text: string };
 
@@ -232,9 +233,15 @@ function TutorPane({
     setDismissed(new Set());
     setSuggestionsLoading(true);
     fetch(`/api/tutor/suggestions/${lectureId}`)
-      .then((r) => r.json())
-      .then((data: { questions?: string[] }) => {
-        setSuggestions(data.questions ?? []);
+      .then(async (r) => {
+        const data = await r.json();
+        if (r.status === 401 && data?.error === "LOGIN_REQUIRED") {
+          // Guest has exhausted the free sample — surface the sign-in dialog.
+          emitLoginRequired();
+          setSuggestions([]);
+          return;
+        }
+        setSuggestions((data as { questions?: string[] }).questions ?? []);
       })
       .catch(() => setSuggestions([]))
       .finally(() => setSuggestionsLoading(false));
