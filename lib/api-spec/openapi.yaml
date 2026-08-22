@@ -380,7 +380,7 @@ paths:
     get:
       operationId: getVisitorStats
       tags: [analytics]
-      summary: Unique visitor counts (admin only)
+      summary: Unique visitor counts
       responses:
         "200":
           description: OK

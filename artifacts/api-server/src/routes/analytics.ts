@@ -1,6 +1,5 @@
 import { Router, type IRouter } from "express";
 import { and, asc, desc, eq, sql } from "drizzle-orm";
-import { getAuth, clerkClient } from "@clerk/express";
 import {
   db,
   topicsTable,
@@ -9,7 +8,6 @@ import {
   assignmentsTable,
   visitorsTable,
 } from "@workspace/db";
-import type { IdentifiedRequest } from "../middlewares/identify";
 import { getUserId } from "../lib/userId";
 import {
   GetAnalyticsSummaryResponse,
@@ -21,37 +19,14 @@ import { chatJson } from "../lib/ai";
 
 const router: IRouter = Router();
 
-const ADMIN_EMAIL = "johnmichaelkuczynski@gmail.com";
-
 // Public beacon: the frontend pings this on load. The identify middleware has
 // already upserted the visitor row, so this simply acknowledges.
 router.post("/analytics/visit", (_req, res) => {
   res.json({ ok: true });
 });
 
-// Admin-only: unique visitor counts, visible only to the course owner.
-router.get("/analytics/visitors", async (req, res) => {
-  const r = req as IdentifiedRequest;
-  const auth = getAuth(req);
-  const clerkUserId = auth?.userId;
-  if (r.isGuest || !clerkUserId) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
-  let email: string | undefined;
-  try {
-    const user = await clerkClient.users.getUser(clerkUserId);
-    email = user.emailAddresses.find(
-      (e) => e.id === user.primaryEmailAddressId,
-    )?.emailAddress;
-  } catch {
-    res.status(403).json({ error: "Forbidden" });
-    return;
-  }
-  if (email?.toLowerCase() !== ADMIN_EMAIL) {
-    res.status(403).json({ error: "Forbidden" });
-    return;
-  }
+// Unique visitor counts remain available without requiring an account.
+router.get("/analytics/visitors", async (_req, res) => {
   const rows = await db
     .select({
       kind: visitorsTable.kind,

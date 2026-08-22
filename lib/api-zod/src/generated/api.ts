@@ -441,7 +441,7 @@ export const RecordVisitResponse = zod.object({
 
 
 /**
- * @summary Unique visitor counts (admin only)
+ * @summary Unique visitor counts
  */
 export const GetVisitorStatsResponse = zod.object({
   "uniqueVisitors": zod.number(),

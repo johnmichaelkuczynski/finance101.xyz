@@ -1,15 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import crypto from "node:crypto";
-import { getAuth } from "@clerk/express";
-import { eq, sql } from "drizzle-orm";
-import {
-  db,
-  visitorsTable,
-  attemptsTable,
-  practiceSessionsTable,
-  practiceAttemptsTable,
-  practiceAssignmentsTable,
-} from "@workspace/db";
+import { sql } from "drizzle-orm";
+import { db, visitorsTable } from "@workspace/db";
 
 export const GUEST_COOKIE = "fin_guest";
 
@@ -31,74 +23,26 @@ function readCookie(req: Request, name: string): string | null {
 // Throttle visitor upserts: only hit the DB once per visitor per process run.
 const seenVisitors = new Set<string>();
 
-async function trackVisitor(visitorId: string, kind: "guest" | "user") {
+async function trackVisitor(visitorId: string) {
   if (seenVisitors.has(visitorId)) return;
   seenVisitors.add(visitorId);
   try {
     await db
       .insert(visitorsTable)
-      .values({ visitorId, kind })
+      .values({ visitorId, kind: "guest" })
       .onConflictDoUpdate({
         target: visitorsTable.visitorId,
-        set: { lastSeenAt: sql`now()`, kind },
+        set: { lastSeenAt: sql`now()`, kind: "guest" },
       });
   } catch {
     seenVisitors.delete(visitorId);
   }
 }
 
-// One-time transfer of a guest's work to their new signed-in identity.
-const adoptedGuests = new Set<string>();
-
-async function adoptGuestProgress(guestId: string, userId: string) {
-  const key = `${guestId}->${userId}`;
-  if (adoptedGuests.has(key)) return;
-  adoptedGuests.add(key);
-  try {
-    await db
-      .update(attemptsTable)
-      .set({ userId })
-      .where(eq(attemptsTable.userId, guestId));
-    await db
-      .update(practiceSessionsTable)
-      .set({ userId })
-      .where(eq(practiceSessionsTable.userId, guestId));
-    await db
-      .update(practiceAttemptsTable)
-      .set({ userId })
-      .where(eq(practiceAttemptsTable.userId, guestId));
-    await db
-      .update(practiceAssignmentsTable)
-      .set({ userId })
-      .where(eq(practiceAssignmentsTable.userId, guestId));
-  } catch {
-    adoptedGuests.delete(key);
-  }
-}
-
-// Identifies the caller without walling anyone out. Signed-in users get their
-// Clerk user id; anonymous visitors get a long-lived guest cookie id. Every
-// route downstream can rely on req.userId being present.
+// Every anonymous visitor gets a long-lived ID so progress and analytics keep
+// working without accounts. Every route downstream can rely on req.userId.
 export function identify(req: Request, res: Response, next: NextFunction): void {
   const r = req as IdentifiedRequest;
-  const auth = getAuth(req);
-  const clerkId = auth?.sessionClaims?.userId || auth?.userId;
-
-  if (clerkId) {
-    r.userId = String(clerkId);
-    r.isGuest = false;
-    void trackVisitor(r.userId, "user");
-    // If this browser was a guest before signing in, adopt that guest's
-    // progress so nothing is lost, then retire the guest cookie.
-    const priorGuestId = readCookie(req, GUEST_COOKIE);
-    if (priorGuestId && /^g_[A-Za-z0-9-]{8,64}$/.test(priorGuestId)) {
-      res.clearCookie(GUEST_COOKIE, { path: "/" });
-      void adoptGuestProgress(priorGuestId, r.userId);
-    }
-    next();
-    return;
-  }
-
   let guestId = readCookie(req, GUEST_COOKIE);
   if (!guestId || !/^g_[A-Za-z0-9-]{8,64}$/.test(guestId)) {
     guestId = `g_${crypto.randomUUID()}`;
@@ -112,6 +56,6 @@ export function identify(req: Request, res: Response, next: NextFunction): void 
   }
   r.userId = guestId;
   r.isGuest = true;
-  void trackVisitor(guestId, "guest");
+  void trackVisitor(guestId);
   next();
 }

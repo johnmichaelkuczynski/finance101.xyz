@@ -5,7 +5,6 @@ import {
   useGetVisitorStats,
   getGetVisitorStatsQueryKey,
 } from "@workspace/api-client-react";
-import { useUser } from "@clerk/react";
 import { Eye } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { TopicsList } from "@/components/TopicsList";
@@ -14,21 +13,14 @@ import { Link } from "wouter";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 
-const ADMIN_EMAIL = "johnmichaelkuczynski@gmail.com";
-
-// Unique visitor count, visible only to the course owner's account.
-function AdminVisitorCount() {
-  const { user } = useUser();
-  const isAdmin =
-    user?.primaryEmailAddress?.emailAddress?.toLowerCase() === ADMIN_EMAIL;
+function VisitorCount() {
   const { data } = useGetVisitorStats({
     query: {
-      enabled: isAdmin,
       retry: false,
       queryKey: getGetVisitorStatsQueryKey(),
     },
   });
-  if (!isAdmin || !data) return null;
+  if (!data) return null;
   return (
     <div
       className="inline-flex items-center gap-2 text-xs text-muted-foreground border border-border rounded-md px-2.5 py-1.5 bg-card w-fit"
@@ -58,7 +50,7 @@ export default function Dashboard() {
           </h1>
           <p className="text-muted-foreground">Welcome to Finance.</p>
           <div className="mt-2">
-            <AdminVisitorCount />
+            <VisitorCount />
           </div>
         </div>
 

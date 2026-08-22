@@ -1568,7 +1568,7 @@ export const getGetVisitorStatsUrl = () => {
 }
 
 /**
- * @summary Unique visitor counts (admin only)
+ * @summary Unique visitor counts
  */
 export const getVisitorStats = async ( options?: RequestInit): Promise<VisitorStats> => {
 
@@ -1615,7 +1615,7 @@ export type GetVisitorStatsQueryError = ErrorType<unknown>
 
 
 /**
- * @summary Unique visitor counts (admin only)
+ * @summary Unique visitor counts
  */
 
 export function useGetVisitorStats<TData = Awaited<ReturnType<typeof getVisitorStats>>, TError = ErrorType<unknown>>(

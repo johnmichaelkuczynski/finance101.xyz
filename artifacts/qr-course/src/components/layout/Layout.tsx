@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { LayoutDashboard, PenTool, BarChart3, Activity, RotateCcw, Sparkles, LogOut } from "lucide-react";
+import { LayoutDashboard, PenTool, BarChart3, Activity, RotateCcw, Sparkles } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useClerk, useUser } from "@clerk/react";
-
-const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 export function Sidebar() {
   const [location] = useLocation();
-  const { signOut } = useClerk();
-  const { user } = useUser();
 
   const navItems = [
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -51,51 +46,6 @@ export function Sidebar() {
       </div>
 
       <div className="p-4 border-t border-border flex flex-col gap-3">
-        {!user && (
-          <Link href="/sign-in">
-            <div
-              className="inline-flex w-full items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium bg-primary text-primary-foreground hover:opacity-90 transition-opacity cursor-pointer"
-              data-testid="button-sidebar-signin"
-            >
-              Sign in with Google
-            </div>
-          </Link>
-        )}
-        {user && (
-          <div className="flex items-center gap-2 px-1">
-            {user.imageUrl ? (
-              <img
-                src={user.imageUrl}
-                alt=""
-                className="w-8 h-8 rounded-full object-cover"
-              />
-            ) : (
-              <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-xs font-medium">
-                {(user.firstName?.[0] ?? user.primaryEmailAddress?.emailAddress?.[0] ?? "?").toUpperCase()}
-              </div>
-            )}
-            <div className="min-w-0">
-              <div className="text-sm font-medium truncate">
-                {user.fullName ?? user.primaryEmailAddress?.emailAddress ?? "Student"}
-              </div>
-              {user.primaryEmailAddress?.emailAddress && (
-                <div className="text-xs text-muted-foreground truncate">
-                  {user.primaryEmailAddress.emailAddress}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-        {user && (
-        <button
-          onClick={() => signOut({ redirectUrl: basePath || "/" })}
-          className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium border border-border hover:bg-secondary transition-colors"
-          data-testid="button-signout"
-        >
-          <LogOut className="w-4 h-4" />
-          Sign out
-        </button>
-        )}
         <div className="text-xs text-muted-foreground text-center">
           Finance
         </div>
@@ -141,7 +91,7 @@ function TopBar() {
   async function handleReset() {
     if (
       !confirm(
-        "Reset the course? This deletes every assignment attempt, answer, and practice session, but keeps lectures and assignments.",
+        "Reset your course? This deletes your assignment attempts, answers, and practice sessions, but keeps lectures and assignments.",
       )
     )
       return;
@@ -175,7 +125,7 @@ function TopBar() {
         disabled={resetting}
         className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium border border-border hover:bg-secondary disabled:opacity-50"
         data-testid="button-reset"
-        title="Wipe all student progress (keeps lectures and assignments)"
+        title="Wipe your progress (keeps lectures and assignments)"
       >
         <RotateCcw className={`w-4 h-4 ${resetting ? "animate-spin" : ""}`} />
         {resetting ? "Resetting…" : "Reset course"}

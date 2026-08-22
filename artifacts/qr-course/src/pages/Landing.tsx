@@ -60,18 +60,11 @@ export default function Landing() {
         </div>
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setLocation("/sign-in")}
-            className="px-4 py-2 rounded-md text-sm font-medium border border-border hover:bg-secondary transition-colors"
-            data-testid="button-signin"
-          >
-            Sign in
-          </button>
-          <button
-            onClick={() => setLocation("/sign-up")}
+            onClick={() => setLocation("/dashboard")}
             className="px-4 py-2 rounded-md text-sm font-medium bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
-            data-testid="button-signup"
+            data-testid="button-open-course"
           >
-            Get started
+            Open course
           </button>
         </div>
       </header>
@@ -103,12 +96,6 @@ export default function Landing() {
             >
               Start the course — no sign-up needed
               <ArrowRight className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => setLocation("/sign-in")}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-md text-base font-medium border border-border hover:bg-secondary transition-colors"
-            >
-              Sign in
             </button>
           </div>
         </section>

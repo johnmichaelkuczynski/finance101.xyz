@@ -15,6 +15,7 @@ import {
 import { chatText, chatJson, FAST_MODEL, TEXT_MODEL } from "../lib/ai";
 import { detect } from "../lib/detection";
 import { gradeAnswer } from "../lib/grading";
+import { getUserId } from "../lib/userId";
 
 const router: IRouter = Router();
 
@@ -713,15 +714,18 @@ router.post("/diagnostics/content-audit", async (_req, res) => {
   }
 });
 
-// ---------- Reset: wipe all student progress, keep course content ----------
-router.post("/diagnostics/reset", async (_req, res) => {
-  // Delete in dependency order. Course content (topics, lectures, assignments,
-  // problems) is preserved; only student progress / generated practice is wiped.
-  await db.delete(practiceAttemptsTable);
-  await db.delete(practiceProblemsTable);
-  await db.delete(practiceSessionsTable);
-  await db.delete(answersTable);
-  await db.delete(attemptsTable);
+// ---------- Reset: wipe this visitor's progress, keep course content ----------
+router.post("/diagnostics/reset", async (req, res) => {
+  const userId = getUserId(req);
+  // Child answers and generated problems are removed by the parent tables'
+  // cascade rules. Other visitors' progress is never touched.
+  await db
+    .delete(practiceAttemptsTable)
+    .where(eq(practiceAttemptsTable.userId, userId));
+  await db
+    .delete(practiceSessionsTable)
+    .where(eq(practiceSessionsTable.userId, userId));
+  await db.delete(attemptsTable).where(eq(attemptsTable.userId, userId));
   res.json({ ok: true, resetAt: new Date().toISOString() });
 });
 
