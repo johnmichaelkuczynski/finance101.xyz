@@ -6,7 +6,7 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 
-// One row per unique visitor (guest cookie id or Clerk user id).
+// One row per unique anonymous visitor.
 export const visitorsTable = pgTable("visitors", {
   id: serial("id").primaryKey(),
   visitorId: text("visitor_id").notNull().unique(),
@@ -19,8 +19,7 @@ export const visitorsTable = pgTable("visitors", {
     .defaultNow(),
 });
 
-// Cumulative AI-generated output (characters) per guest. Once a guest passes
-// the free-sample threshold, AI endpoints require sign-in.
+// Legacy cumulative AI-output accounting per anonymous visitor.
 export const guestUsageTable = pgTable("guest_usage", {
   id: serial("id").primaryKey(),
   guestId: text("guest_id").notNull().unique(),
