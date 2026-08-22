@@ -18,6 +18,7 @@ import { StarterQuestionCard } from "@/components/StarterQuestionCard";
 import { MathChatInput } from "@/components/MathChatInput";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, MessageSquare, Sparkles, Send, X, RefreshCw, CheckCircle2, XCircle } from "lucide-react";
+import { Helmet } from "react-helmet-async";
 
 type ChatMsg = { role: "user" | "tutor"; text: string };
 
@@ -70,6 +71,15 @@ export default function LectureView() {
 
   return (
     <Layout>
+      {lecture && (
+        <Helmet>
+          <title>{lecture.title} — Finance 101</title>
+          <meta name="description" content={`Finance 101 lecture: ${lecture.title}. Week ${lecture.weekNumber} of the free four-week finance course with AI tutor.`} />
+          <link rel="canonical" href={`https://finance101.xyz/lectures/${lecture.id}`} />
+          <meta property="og:title" content={`${lecture.title} — Finance 101`} />
+          <meta property="og:url" content={`https://finance101.xyz/lectures/${lecture.id}`} />
+        </Helmet>
+      )}
       <div className="px-6 pt-4 pb-2">
         <Link href={lecture ? `/weeks/${lecture.weekNumber}` : "/"}>
           <Button variant="ghost" className="-ml-2 text-muted-foreground hover:text-foreground">

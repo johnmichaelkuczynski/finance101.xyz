@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet-async";
 import { useGetWeek } from "@workspace/api-client-react";
 import { Layout } from "@/components/layout/Layout";
 import { useParams, Link } from "wouter";
@@ -13,6 +14,15 @@ export default function WeekView() {
 
   return (
     <Layout>
+      {week && (
+        <Helmet>
+          <title>Week {week.weekNumber}: {week.title} — Finance 101</title>
+          <meta name="description" content={week.summary ?? undefined} />
+          <link rel="canonical" href={`https://finance101.xyz/weeks/${week.weekNumber}`} />
+          <meta property="og:title" content={`Week ${week.weekNumber}: ${week.title} — Finance 101`} />
+          <meta property="og:url" content={`https://finance101.xyz/weeks/${week.weekNumber}`} />
+        </Helmet>
+      )}
       <div className="p-8 max-w-4xl mx-auto w-full flex flex-col gap-8">
         {isLoading ? (
           <div>
