@@ -1,0 +1,16 @@
+# Finance 101
+
+> A free, self-paced four-week finance course covering the time value of money, financial statements, risk and return, markets, valuation, and corporate finance.
+
+Canonical home: https://finance101.xyz/
+
+## Course weeks
+
+- [Week 1 — Foundations and the time value of money](https://finance101.xyz/weeks/1)
+- [Week 2 — Financial statements and analysis](https://finance101.xyz/weeks/2)
+- [Week 3 — Risk, return, and markets](https://finance101.xyz/weeks/3)
+- [Week 4 — Valuation and corporate finance](https://finance101.xyz/weeks/4)
+
+Individual lectures are available beneath `https://finance101.xyz/lectures/{id}`, where `{id}` is the lecture identifier.
+
+For the complete inventory of course pages, see the [XML sitemap](https://finance101.xyz/sitemap.xml).
