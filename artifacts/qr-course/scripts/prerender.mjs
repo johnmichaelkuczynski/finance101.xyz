@@ -98,6 +98,13 @@ function escHtml(str) {
     .replace(/"/g, "&quot;");
 }
 
+/** Keep crawler-facing descriptions in the useful search-snippet range. */
+function metaDescription(description) {
+  const normalized = description.replace(/\s+/g, " ").trim();
+  if (normalized.length <= 160) return normalized;
+  return `${normalized.slice(0, 157).replace(/\s+\S*$/, "")}…`;
+}
+
 /**
  * Build a static HTML page from the shell.
  * @param {object} opts
@@ -176,7 +183,10 @@ for (const lec of lectures) {
   const canonical = `${SITE_BASE}${urlPath === "/" ? "" : urlPath}`;
 
   const title = `${lec.lectureTitle} — Finance 101`;
-  const description = lec.blurb;
+  const description = metaDescription(
+    lec.metaDescription ??
+      `${lec.lectureTitle}: ${lec.blurb} Learn the finance concepts and tools behind the topic.`
+  );
 
   const bodyHtml = `<article style="padding:2rem;max-width:860px;margin:0 auto;font-family:Georgia,serif;line-height:1.7">
 <p style="font-size:.85rem;color:#666;margin-bottom:.5rem">Week ${lec.weekNumber}</p>
@@ -204,7 +214,7 @@ for (const [weekNumStr, meta] of Object.entries(WEEK_META)) {
   const canonical = `${SITE_BASE}${urlPath}`;
 
   const title = `${meta.title} — Finance 101`;
-  const description = meta.summary;
+  const description = metaDescription(meta.metaDescription ?? meta.summary);
 
   const weekLectures = lectures.filter((l) => l.weekNumber === weekNumber);
 

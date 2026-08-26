@@ -7,21 +7,29 @@ export const WEEK_META = {
     title: "Week 1 — Foundations and the time value of money",
     summary:
       "What finance is and why it exists; the financial system and markets; money, interest, and the time value of money; present and future value; discounting cash flows; annuities and perpetuities; nominal vs. real rates and inflation.",
+    metaDescription:
+      "Build a practical finance foundation: learn why money moves across time, calculate present and future value, and discount cash flows, annuities, and inflation.",
   },
   2: {
     title: "Week 2 — Financial statements and analysis",
     summary:
       "An overview of the financial statements; the balance sheet; the income statement; the statement of cash flows; financial ratio analysis; working capital and liquidity; reading annual reports.",
+    metaDescription:
+      "Learn to read the three financial statements, connect a firm's numbers, use ratios to assess performance, and evaluate liquidity in real annual reports.",
   },
   3: {
     title: "Week 3 — Risk, return, and markets",
     summary:
       "Risk and return fundamentals; measuring return; measuring risk and volatility; diversification and portfolios; the risk–return tradeoff; the Capital Asset Pricing Model; market efficiency.",
+    metaDescription:
+      "Understand investment risk and return, measure volatility, diversify portfolios, apply CAPM, and test how efficiently markets reflect information.",
   },
   4: {
     title: "Week 4 — Valuation and corporate finance",
     summary:
       "Bond valuation; stock valuation; capital budgeting and NPV; the cost of capital; capital structure and leverage; corporate financing and dividends; financial intermediaries; a capstone synthesis.",
+    metaDescription:
+      "Learn to value bonds, stocks, and projects with NPV, estimate WACC, understand leverage and payouts, and connect every topic through corporate finance.",
   },
 };
 
@@ -32,6 +40,8 @@ export const TOPICS = [
     slug: "what-is-finance",
     weekNumber: 1,
     blurb: "Finance exists to move resources across time and states of the world.",
+    metaDescription:
+      "Finance allocates scarce resources across time and uncertainty. Learn the core investment, financing, and risk questions that anchor every finance decision.",
     lectureTitle: "1.1 What finance is and why it exists",
     body: `Finance is the study of how people and organizations allocate scarce resources across time under uncertainty. At its root, finance exists to move resources across time: to let someone who has money now but will need it later store value, and to let someone who needs money now but will have it later borrow against the future.
 
@@ -45,6 +55,8 @@ A real example: In a farming village, a farmer needs seed and tools in the sprin
     slug: "financial-system-markets",
     weekNumber: 1,
     blurb: "How savings reach borrowers: markets, intermediaries, primary vs. secondary.",
+    metaDescription:
+      "Follow savings from lenders to borrowers through markets and intermediaries, and distinguish primary from secondary markets to understand capital pricing.",
     lectureTitle: "1.2 The financial system and markets",
     body: `The financial system is the network of markets, institutions, and instruments that connects savers to borrowers. Funds can flow two ways: directly, when a borrower issues a security straight to investors, or indirectly, through a financial intermediary such as a bank that takes deposits and makes loans.
 
@@ -58,6 +70,8 @@ A real example: When a company like Airbnb "goes public," it sells new shares on
     slug: "money-interest-tvm",
     weekNumber: 1,
     blurb: "A dollar today is worth more than a dollar tomorrow — and interest is the price.",
+    metaDescription:
+      "Learn why a dollar today is worth more than one tomorrow, and use interest to compare cash flows across time—the foundation for every valuation.",
     lectureTitle: "1.3 Money, interest, and the time value of money",
     body: `The single most important idea in finance is the time value of money: a dollar today is worth more than a dollar tomorrow, because a dollar today can be invested to earn interest, and because the future is uncertain.
 
@@ -71,6 +85,8 @@ A real example: $1,000 invested at 8% becomes $1,080 after one year. Left for 30
     slug: "present-future-value",
     weekNumber: 1,
     blurb: "The two master formulas that move a single cash flow through time.",
+    metaDescription:
+      "Master present-value and future-value formulas to translate a single cash flow through time and build intuition for what money is worth today.",
     lectureTitle: "1.4 Present value and future value",
     body: `Two formulas translate a single cash flow between today and the future at a rate r per period over n periods.
 
@@ -86,6 +102,8 @@ A real example: A parent wants $50,000 for a child's college in 18 years and can
     slug: "discounting-cash-flows",
     weekNumber: 1,
     blurb: "Valuing a stream of cash flows as the sum of their present values.",
+    metaDescription:
+      "Learn to discount each expected cash flow and add its present values to value projects and investments, building a core skill in finance.",
     lectureTitle: "1.5 Discounting cash flows",
     body: `Most assets pay not a single amount but a stream of cash flows over time. The value of any asset is the sum of the present values of all the cash flows it produces — this is discounted cash flow (DCF) valuation, the foundation of essentially all of finance.
 
@@ -99,6 +117,8 @@ A real example: A small print shop is offered a machine that will generate $10,0
     slug: "annuities-perpetuities",
     weekNumber: 1,
     blurb: "Closed-form shortcuts for level streams — finite and forever.",
+    metaDescription:
+      "Calculate the value of level cash-flow streams with annuity and perpetuity formulas, then recognize when each shortcut fits real finance problems.",
     lectureTitle: "1.6 Annuities and perpetuities",
     body: `Some cash-flow streams are regular enough to have closed-form present values, so you never have to discount term by term.
 
@@ -112,6 +132,8 @@ A real example: British consols, issued in the 18th century, were government bon
     slug: "nominal-real-rates-inflation",
     weekNumber: 1,
     blurb: "Separating the growth of money from the growth of purchasing power.",
+    metaDescription:
+      "Separate nominal growth from real purchasing power, adjust rates for inflation, and compare money received at different times more accurately.",
     lectureTitle: "1.7 Nominal vs. real rates and inflation",
     body: `Interest rates come in two flavors. The nominal rate i is the stated rate — what your account literally pays. The real rate r is the rate after stripping out inflation π — the growth in your actual purchasing power.
 
@@ -127,6 +149,8 @@ A real example: In the 1970s, U.S. savers earning 6% on deposits felt prosperous
     slug: "financial-statements-overview",
     weekNumber: 2,
     blurb: "The three statements that describe a firm, and how they connect.",
+    metaDescription:
+      "See how the balance sheet, income statement, and cash-flow statement describe a firm's performance, position, and financial health together.",
     lectureTitle: "2.1 Financial statements overview",
     body: `A firm's financial reality is captured by three core statements plus the accompanying notes. Together they answer: what does the firm own and owe, did it make money, and where did the cash go?
 
@@ -142,6 +166,8 @@ A real example: Amazon reported years of thin or negative net income while gener
     slug: "balance-sheet",
     weekNumber: 2,
     blurb: "Assets = Liabilities + Equity — the identity that must always hold.",
+    metaDescription:
+      "Use Assets = Liabilities + Equity to read a balance sheet, trace what a firm owns and owes, and assess how it is financed over time.",
     lectureTitle: "2.2 The balance sheet",
     body: `The balance sheet lists what a firm owns and how it was financed, at a single point in time. It is governed by one identity that can never be violated: Assets = Liabilities + Equity.
 
@@ -155,6 +181,8 @@ A real example: If a startup buys a $30,000 delivery van with $10,000 of its own
     slug: "income-statement",
     weekNumber: 2,
     blurb: "From top-line revenue down to bottom-line net income.",
+    metaDescription:
+      "Read an income statement from revenue to net income, and connect operating performance, margins, and profitability to business decisions.",
     lectureTitle: "2.3 The income statement",
     body: `The income statement (or profit-and-loss statement) measures performance over a period by subtracting expenses from revenues to arrive at profit. It is read top to bottom, peeling away categories of cost.
 
@@ -168,6 +196,8 @@ A real example: A coffee shop with $500,000 revenue, $200,000 cost of beans and 
     slug: "statement-cash-flows",
     weekNumber: 2,
     blurb: "Where the cash actually came from and went: operations, investing, financing.",
+    metaDescription:
+      "Trace cash from operations, investing, and financing to explain why profit and cash differ and evaluate how a firm funds its activities.",
     lectureTitle: "2.4 The statement of cash flows",
     body: `The statement of cash flows tracks actual cash, undoing the accrual assumptions of the income statement. It sorts every cash movement into three buckets whose total equals the change in the cash balance.
 
@@ -181,6 +211,8 @@ A real example: A fast-growing software startup can show negative net income yet
     slug: "financial-ratio-analysis",
     weekNumber: 2,
     blurb: "Turning raw statements into comparable measures of health and performance.",
+    metaDescription:
+      "Turn raw financial statements into ratios for profitability, efficiency, leverage, and liquidity, making firms easier to compare and evaluate.",
     lectureTitle: "2.5 Financial ratio analysis",
     body: `Raw numbers are hard to compare across firms of different sizes; ratios normalize them. They fall into four families: liquidity, leverage, profitability, and efficiency.
 
@@ -194,6 +226,8 @@ A real example: A discount grocer and a luxury jeweler may both post a 15% ROE. 
     slug: "working-capital-liquidity",
     weekNumber: 2,
     blurb: "The short-term cash cushion that keeps a solvent firm from failing.",
+    metaDescription:
+      "Understand working capital and liquidity, measure a firm's short-term cushion, and spot how cash pressure can threaten a solvent business.",
     lectureTitle: "2.6 Working capital and liquidity",
     body: `Liquidity is the ability to meet obligations as they come due. A firm can be profitable on paper and still fail if it cannot pay this week's bills — so short-term management of cash matters as much as long-run profit.
 
@@ -207,6 +241,8 @@ A real example: Dell famously ran a negative cash conversion cycle: it collected
     slug: "annual-reports",
     weekNumber: 2,
     blurb: "Beyond the numbers: MD&A, footnotes, and the art of skepticism.",
+    metaDescription:
+      "Read annual reports with healthy skepticism by using MD&A and footnotes to uncover context, assumptions, and risks behind headline numbers.",
     lectureTitle: "2.7 Reading and interpreting annual reports",
     body: `The financial statements are only part of a company's annual report (in the U.S., the 10-K filed with the SEC). The narrative and the footnotes often matter as much as the headline numbers.
 
@@ -222,6 +258,8 @@ A real example: Before Enron collapsed in 2001, its income statement showed soar
     slug: "risk-return-fundamentals",
     weekNumber: 3,
     blurb: "The central bargain of investing: higher expected return demands higher risk.",
+    metaDescription:
+      "Learn the risk–return bargain in investing: higher expected returns require uncertainty, so risk must be measured before it can be managed.",
     lectureTitle: "3.1 Risk and return fundamentals",
     body: `Every investment is a trade of certain money now for uncertain money later. The two dimensions that describe any investment are its return (how much you expect to make) and its risk (how uncertain that outcome is).
 
@@ -237,6 +275,8 @@ A real example: From 1926 to today, U.S. stocks returned roughly 10% a year and 
     slug: "measuring-return",
     weekNumber: 3,
     blurb: "Expected return as a probability-weighted average of outcomes.",
+    metaDescription:
+      "Calculate expected return as a probability-weighted outcome and use scenarios to make investment decisions more explicit and disciplined.",
     lectureTitle: "3.2 Measuring return",
     body: `To compare investments we need a single number summarizing their likely return. When outcomes are uncertain, that number is the expected return — the probability-weighted average of the possible returns.
 
@@ -250,6 +290,8 @@ A real example: Suppose a stock has a 50% chance of a +30% year and a 50% chance
     slug: "measuring-risk-volatility",
     weekNumber: 3,
     blurb: "Variance and standard deviation as the language of uncertainty.",
+    metaDescription:
+      "Measure investment uncertainty with variance and standard deviation, turning volatile outcomes into evidence for risk and return analysis.",
     lectureTitle: "3.3 Measuring risk and volatility",
     body: `If expected return is the center of an investment's distribution, risk is its spread. Finance measures spread with variance and its square root, standard deviation (called volatility).
 
@@ -263,6 +305,8 @@ A real example: During the 2008 crisis, the annualized volatility of the S&P 500
     slug: "diversification-portfolio",
     weekNumber: 3,
     blurb: "Why combining imperfectly correlated assets reduces risk for free.",
+    metaDescription:
+      "Build diversified portfolios by combining imperfectly correlated assets, reducing avoidable risk without automatically sacrificing expected return.",
     lectureTitle: "3.4 Diversification and portfolio basics",
     body: `The deepest practical insight in finance is that risk does not simply add up. By holding many assets that do not move in lockstep, an investor can reduce risk without sacrificing expected return — the closest thing to a free lunch in finance.
 
@@ -276,6 +320,8 @@ A real example: Pair an umbrella maker and a sunscreen maker. Each alone is vola
     slug: "risk-return-tradeoff",
     weekNumber: 3,
     blurb: "The efficient frontier and rewarding risk per unit of volatility.",
+    metaDescription:
+      "Use the efficient frontier to compare portfolios and understand how investors are rewarded for each unit of volatility they accept.",
     lectureTitle: "3.5 The risk-return tradeoff",
     body: `Once we can compute the return and risk of any portfolio, we can ask: among all portfolios, which give the most return per unit of risk? The answer is the efficient frontier and the metric that ranks portfolios along it.
 
@@ -289,6 +335,8 @@ A real example: Compare two funds: Fund A returns 12% with σ = 20%, Fund B retu
     slug: "capm",
     weekNumber: 3,
     blurb: "Pricing systematic risk: expected return as a linear function of beta.",
+    metaDescription:
+      "Apply CAPM to price systematic risk, interpret beta, and estimate the return investors require for bearing market exposure.",
     lectureTitle: "3.6 The Capital Asset Pricing Model",
     body: `If diversification removes firm-specific risk, then the market should only reward the risk you cannot diversify away — the systematic risk an asset shares with the market. The CAPM turns that idea into a price.
 
@@ -302,6 +350,8 @@ A real example: With R_f = 3%, an expected market return of 9%, and a stock beta
     slug: "market-efficiency",
     weekNumber: 3,
     blurb: "Do prices already reflect all information? The EMH and its three forms.",
+    metaDescription:
+      "Explore the efficient-market hypothesis and its three forms to assess whether prices reflect public information and what that means for investors.",
     lectureTitle: "3.7 Market efficiency",
     body: `The Efficient Market Hypothesis (EMH) asks whether asset prices already incorporate available information. If they do, then prices change only in response to new information, which is by definition unpredictable — so prices follow a random walk and consistently beating the market is nearly impossible.
 
@@ -317,6 +367,8 @@ A real example: When a company announces surprise earnings, its stock typically 
     slug: "bond-valuation",
     weekNumber: 4,
     blurb: "A bond is an annuity of coupons plus a final repayment — discount and add.",
+    metaDescription:
+      "Value a bond by discounting its coupon annuity and final repayment, then see how rates, time, and cash flows move its price.",
     lectureTitle: "4.1 Bond valuation",
     body: `A bond is a loan in security form: the issuer pays periodic coupons C and repays the face value F at maturity. Its price is just the present value of those cash flows, discounted at the market yield y.
 
@@ -330,6 +382,8 @@ A real example: A 10-year bond with $1,000 face, a 5% coupon ($50/year), priced 
     slug: "stock-valuation",
     weekNumber: 4,
     blurb: "A share is worth the present value of the dividends it will ever pay.",
+    metaDescription:
+      "Value a stock from the present value of future dividends and connect dividend growth assumptions to the price an investor should pay.",
     lectureTitle: "4.2 Stock valuation",
     body: `A share of stock is a claim on a company's future cash distributions. Its intrinsic value is the present value of all expected future dividends — the dividend discount model.
 
@@ -343,6 +397,8 @@ A real example: A utility expected to pay a $2 dividend next year, growing 3% fo
     slug: "capital-budgeting-npv",
     weekNumber: 4,
     blurb: "The decision rule that ties the whole course together: take positive-NPV projects.",
+    metaDescription:
+      "Use NPV and incremental cash flows to choose value-creating projects, making capital budgeting the decision rule that ties the course together.",
     lectureTitle: "4.3 Capital budgeting and NPV",
     body: `Capital budgeting is how firms decide which long-term projects to fund. The gold-standard rule is net present value (NPV): discount a project's future cash flows and subtract its upfront cost.
 
@@ -356,6 +412,8 @@ A real example: A factory upgrade costs $100,000 today and returns $40,000 a yea
     slug: "cost-of-capital",
     weekNumber: 4,
     blurb: "The blended rate a firm must earn to satisfy all its investors: WACC.",
+    metaDescription:
+      "Estimate WACC as the blended return required by debt and equity investors, then use it as a hurdle rate for corporate decisions.",
     lectureTitle: "4.4 Cost of capital",
     body: `The discount rate r used in valuation is not arbitrary — it is the firm's cost of capital, the return its investors require. Since a firm is funded by both debt and equity, the relevant rate is a weighted average of the two.
 
@@ -369,6 +427,8 @@ A real example: A firm financed 60% equity (cost 12%) and 40% debt (cost 6%), ta
     slug: "capital-structure-leverage",
     weekNumber: 4,
     blurb: "How the mix of debt and equity affects value — and when it stops being free.",
+    metaDescription:
+      "Understand how debt and equity shape value, returns, and financial risk, and learn when leverage stops helping a firm's owners.",
     lectureTitle: "4.5 Capital structure and leverage",
     body: `Capital structure is the mix of debt and equity a firm uses. The central question: does borrowing more (using leverage) make the firm more valuable?
 
@@ -382,6 +442,8 @@ A real example: Leverage magnifies equity returns: a project earning 10% funded 
     slug: "corporate-financing-dividends",
     weekNumber: 4,
     blurb: "Raising capital and returning it: payout policy and the financing pecking order.",
+    metaDescription:
+      "Compare how firms raise capital and return it to investors, including dividends, buybacks, and the pecking order of financing choices.",
     lectureTitle: "4.6 Corporate financing and dividends",
     body: `Firms must decide both how to raise capital and how to return it to shareholders. These are the financing and payout decisions.
 
@@ -397,6 +459,8 @@ A real example: Mature firms like Coca-Cola pay large, steady dividends, signali
     slug: "financial-intermediaries",
     weekNumber: 4,
     blurb: "Banks, funds, and insurers: the plumbing that transforms and channels capital.",
+    metaDescription:
+      "Learn how banks, funds, insurers, and other intermediaries channel capital, pool risk, transform maturities, and support the financial system.",
     lectureTitle: "4.7 Financial intermediaries and institutions",
     body: `Financial intermediaries sit between savers and borrowers, making the financial system work more cheaply and safely than direct lending could. They include commercial banks, investment banks, mutual and pension funds, insurers, and money-market funds.
 
@@ -410,6 +474,8 @@ A real example: In 2008, investment bank Lehman Brothers funded long-term mortga
     slug: "capstone-synthesis",
     weekNumber: 4,
     blurb: "One equation behind everything: value is the PV of expected future cash flows.",
+    metaDescription:
+      "Synthesize the course around one idea: asset value is discounted expected cash flow, connecting statements, risk, rates, and valuation.",
     lectureTitle: "4.8 Capstone synthesis",
     body: `Step back, and the entire course reduces to a single sentence: the value of any asset is the present value of its expected future cash flows, discounted at a rate that reflects their risk.
 
