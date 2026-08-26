@@ -1,6 +1,7 @@
 import { useLocation } from "wouter";
 import { ArrowRight, BookOpen, LineChart, Calculator, Brain } from "lucide-react";
 import { TopicsList } from "@/components/TopicsList";
+import { CompanyContact } from "@/components/CompanyContact";
 
 const weeks = [
   {
@@ -143,8 +144,11 @@ export default function Landing() {
       </main>
       </div>
 
-      <footer className="border-t border-border py-6 text-center text-sm text-muted-foreground">
-        Finance — read the idea, ground the idea, write the idea.
+      <footer className="border-t border-border px-6 py-6 text-sm text-muted-foreground">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 sm:flex-row">
+          <span>Finance — read the idea, ground the idea, write the idea.</span>
+          <CompanyContact />
+        </div>
       </footer>
     </div>
   );

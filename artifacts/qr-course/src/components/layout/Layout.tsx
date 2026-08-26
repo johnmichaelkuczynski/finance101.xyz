@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { LayoutDashboard, PenTool, BarChart3, Activity, RotateCcw, Sparkles } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { CompanyContact } from "@/components/CompanyContact";
 
 export function Sidebar() {
   const [location] = useLocation();
@@ -46,8 +47,8 @@ export function Sidebar() {
       </div>
 
       <div className="p-4 border-t border-border flex flex-col gap-3">
-        <div className="text-xs text-muted-foreground text-center">
-          Finance
+        <div className="flex justify-center text-muted-foreground">
+          <CompanyContact compact />
         </div>
       </div>
     </div>
