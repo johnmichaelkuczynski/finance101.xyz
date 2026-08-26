@@ -105,6 +105,130 @@ function metaDescription(description) {
   return `${normalized.slice(0, 157).replace(/\s+\S*$/, "")}…`;
 }
 
+/** Serialize JSON-LD without allowing content to close the script element. */
+function serializeStructuredData(structuredData) {
+  return JSON.stringify(structuredData, null, 2)
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026");
+}
+
+/**
+ * Build page-specific JSON-LD. The course entity remains on the landing page
+ * only; child pages describe the document a crawler is currently reading.
+ */
+function pageStructuredData({ kind, title, description, canonical, weekNumber, lecture }) {
+  const websiteId = `${SITE_BASE}/#website`;
+  const organizationId = `${SITE_BASE}/#organization`;
+  const breadcrumbId = `${canonical}#breadcrumb`;
+  const pageId = `${canonical}#webpage`;
+
+  const breadcrumbItems = [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Finance 101",
+      item: `${SITE_BASE}/`,
+    },
+  ];
+
+  if (weekNumber) {
+    breadcrumbItems.push({
+      "@type": "ListItem",
+      position: breadcrumbItems.length + 1,
+      name: WEEK_META[weekNumber].title,
+      item: `${SITE_BASE}/weeks/${weekNumber}`,
+    });
+  }
+
+  if (kind === "lecture") {
+    breadcrumbItems.push({
+      "@type": "ListItem",
+      position: breadcrumbItems.length + 1,
+      name: lecture.lectureTitle,
+      item: canonical,
+    });
+  }
+
+  const graph = [
+    {
+      "@type": "Organization",
+      "@id": organizationId,
+      name: "Finance 101",
+      url: `${SITE_BASE}/`,
+    },
+    {
+      "@type": "WebSite",
+      "@id": websiteId,
+      name: "Finance 101",
+      url: `${SITE_BASE}/`,
+      publisher: { "@id": organizationId },
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": breadcrumbId,
+      itemListElement: breadcrumbItems,
+    },
+  ];
+
+  if (kind === "lecture") {
+    graph.push(
+      {
+        "@type": "WebPage",
+        "@id": pageId,
+        url: canonical,
+        name: title,
+        description,
+        isPartOf: { "@id": websiteId },
+        breadcrumb: { "@id": breadcrumbId },
+        mainEntity: { "@id": `${canonical}#article` },
+      },
+      {
+        "@type": "Article",
+        "@id": `${canonical}#article`,
+        url: canonical,
+        headline: lecture.lectureTitle,
+        name: lecture.lectureTitle,
+        description,
+        articleSection: `Week ${lecture.weekNumber}`,
+        author: { "@id": organizationId },
+        publisher: { "@id": organizationId },
+        isPartOf: { "@id": websiteId },
+        mainEntityOfPage: { "@id": pageId },
+        breadcrumb: { "@id": breadcrumbId },
+        learningResourceType: "Lecture",
+        educationalLevel: "Beginner",
+        inLanguage: "en",
+      },
+    );
+  } else {
+    const weekLectures = lectures.filter((lecture) => lecture.weekNumber === weekNumber);
+    graph.push({
+      "@type": ["WebPage", "CollectionPage"],
+      "@id": pageId,
+      url: canonical,
+      name: title,
+      description,
+      isPartOf: { "@id": websiteId },
+      breadcrumb: { "@id": breadcrumbId },
+      mainEntity: {
+        "@type": "ItemList",
+        "@id": `${canonical}#lectures`,
+        name: `${WEEK_META[weekNumber].title} lectures`,
+        numberOfItems: weekLectures.length,
+        itemListElement: weekLectures.map((lecture, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          name: lecture.lectureTitle,
+          url: `${SITE_BASE}${`${BASE_PATH}lectures/${lecture.id}`.replace(/\/\//g, "/")}`,
+        })),
+      },
+    });
+  }
+
+  return { "@context": "https://schema.org", "@graph": graph };
+}
+
 /**
  * Build a static HTML page from the shell.
  * @param {object} opts
@@ -112,8 +236,9 @@ function metaDescription(description) {
  * @param {string} opts.description   - meta description
  * @param {string} opts.canonical     - canonical URL (full https://…)
  * @param {string} opts.bodyHtml      - inner HTML placed inside #root
+ * @param {object} opts.structuredData - JSON-LD to emit for this page
  */
-function buildPage({ title, description, canonical, bodyHtml }) {
+function buildPage({ title, description, canonical, bodyHtml, structuredData }) {
   let html = shellHtml;
 
   // Replace <title>
@@ -157,6 +282,12 @@ function buildPage({ title, description, canonical, bodyHtml }) {
     `<meta property="og:url" content="${escHtml(canonical)}" />`
   );
 
+  // Replace the landing-page Course schema so child pages describe themselves.
+  html = html.replace(
+    /<script id="course-structured-data" type="application\/ld\+json">[\s\S]*?<\/script>/,
+    `<script id="page-structured-data" type="application/ld+json">\n${serializeStructuredData(structuredData)}\n</script>`
+  );
+
   // Inject static content into #root so crawlers see it
   html = html.replace(
     /<div id="root"><\/div>/,
@@ -197,7 +328,20 @@ ${lec.body
   .join("\n")}
 </article>`;
 
-  const html = buildPage({ title, description, canonical, bodyHtml });
+  const html = buildPage({
+    title,
+    description,
+    canonical,
+    bodyHtml,
+    structuredData: pageStructuredData({
+      kind: "lecture",
+      title,
+      description,
+      canonical,
+      weekNumber: lec.weekNumber,
+      lecture: lec,
+    }),
+  });
   const outPath = path.join(distDir, "lectures", String(lec.id), "index.html");
   writeFile(outPath, html);
 }
@@ -234,7 +378,19 @@ ${lectureListHtml}
 </ul>
 </div>`;
 
-  const html = buildPage({ title, description, canonical, bodyHtml });
+  const html = buildPage({
+    title,
+    description,
+    canonical,
+    bodyHtml,
+    structuredData: pageStructuredData({
+      kind: "week",
+      title,
+      description,
+      canonical,
+      weekNumber,
+    }),
+  });
   const outPath = path.join(distDir, "weeks", String(weekNumber), "index.html");
   writeFile(outPath, html);
 }
