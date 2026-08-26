@@ -3,7 +3,7 @@ import zhiLogo from "@/assets/zhi-logo.png";
 export function CompanyContact({ compact = false }: { compact?: boolean }) {
   return (
     <a
-      href="https://zhisystems.org"
+      href="https://zhisystems.ai/"
       target="_blank"
       rel="noopener noreferrer"
       className={`inline-flex items-center rounded-md transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
